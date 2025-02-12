@@ -41,6 +41,11 @@ function Navbar() {
                 </li>
                 <li>
                   <a className="dropdown-item" href="#">
+                    Glosario{" "}
+                  </a>
+                </li>
+                <li>
+                  <a className="dropdown-item" href="#">
                     Patio
                   </a>
                 </li>

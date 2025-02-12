@@ -8,12 +8,12 @@ function Footer() {
     "https://wa.me/584126119898?text=Quiero%20visitar%20el%20patio";
   return (
     <footer
-      className="bg-dark text-light py-3 mt-5"
+      className="bg-dark text-light py-3"
       style={{ borderTop: "1px solid #6c757d" }}
     >
       <div className="container">
         <div className="d-flex flex-row justify-content-between align-items-center">
-          <p className="mb-0">Patio Ambrosio Aguilar</p>
+          <p className="mb-0 fw-bold">Patio Ambrosio Aguilar</p>
           <p className="mb-0">
             © {new Date().getFullYear()} Patio Ambrosio Aguilar. All rights
             reserved.
