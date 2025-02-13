@@ -1,6 +1,7 @@
 import React from "react";
 
 function Footer() {
+  // Links as variables so everything is in just one place.
   const email = "proyectojuegodegarrote@gmail.com";
   const insta = "https://www.instagram.com/patioambrosioaguilar/";
   const youtube = "https://www.youtube.com/@patiodegarroteambrosioagui2898";
