@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Raleway } from "@next/font/google";
 import { ToastContainer } from "react-toastify";
+import Navbar from "@/components/GeneralUse/Navbar";
+import Footer from "@/components/GeneralUse/Footer";
 //import "./globals.css";
 
 const raleway = Raleway({ subsets: ["latin"], weight: ["400", "700"] });
@@ -18,8 +20,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <ToastContainer />
-      <body className={raleway.className}>{children}</body>
+      <body className={raleway.className}>
+        <ToastContainer />
+        <Navbar />
+        {children}
+        <Footer />
+      </body>
+
       <script
         src="https://kit.fontawesome.com/248fbe1e54.js"
         crossOrigin="anonymous"

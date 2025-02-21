@@ -4,7 +4,7 @@ function Navbar() {
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container-fluid">
-        <a className="navbar-brand" href="#">
+        <a className="navbar-brand" href="/">
           J.G.V.
         </a>
         <button
@@ -35,27 +35,27 @@ function Navbar() {
               </a>
               <ul className="dropdown-menu">
                 <li>
-                  <a className="dropdown-item" href="#">
+                  <a className="dropdown-item" href="/fundamentos/historia">
                     Historia{" "}
                   </a>
                 </li>
                 <li>
-                  <a className="dropdown-item" href="#">
+                  <a className="dropdown-item" href="/fundamentos/glosario">
                     Glosario{" "}
                   </a>
                 </li>
                 <li>
-                  <a className="dropdown-item" href="#">
+                  <a className="dropdown-item" href="/fundamentos/patio">
                     Patio
                   </a>
                 </li>
                 <li>
-                  <a className="dropdown-item" href="#">
+                  <a className="dropdown-item" href="/fundamentos/tejido">
                     Tejido{" "}
                   </a>
                 </li>
                 <li>
-                  <a className="dropdown-item" href="#">
+                  <a className="dropdown-item" href="/fundamentos/garrote">
                     Garrote{" "}
                   </a>
                 </li>
@@ -72,12 +72,12 @@ function Navbar() {
               </a>
             </li> */}
             <li className="nav-item">
-              <a className="nav-link" href="#">
+              <a className="nav-link" href="/jugadores">
                 Jugadores
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#">
+              <a className="nav-link" href="/patios">
                 Patios
               </a>
             </li>

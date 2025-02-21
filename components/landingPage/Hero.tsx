@@ -1,7 +1,7 @@
 import React from "react";
 
 function Hero() {
-  const backgroundImage = "https://placehold.co/600x400"; // Replace with your image path
+  const backgroundImage = "/GarrotePhotos/photo3.jpeg";
   const title = "Juego de Garrote Venezolano";
   const text =
     "Conoce el arte marcial de Origen Venezolano de la mano de sus cultores, investigadores y maestros.";
@@ -13,7 +13,7 @@ function Hero() {
       className="container-fluid bg-dark text-light py-5"
       style={{
         backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: "cover",
+        backgroundSize: "",
         backgroundPosition: "center",
         minHeight: "500px", // Adjust as needed
         position: "relative", // Required for the overlay
