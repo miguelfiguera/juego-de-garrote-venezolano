@@ -49,6 +49,17 @@ export const createUser = async (
   }
 };
 
+// modify customClaims so each user can add public roles
+export const modifyCustomClaims = async (uid: string, claims: any) => {
+  try {
+    await adminAuth.setCustomUserClaims(uid, claims);
+    return true;
+  } catch (error) {
+    console.error("Error modifying custom claims:", error);
+    return false;
+  }
+};
+
 //get all users
 
 export const getAllUsers = async () => {
