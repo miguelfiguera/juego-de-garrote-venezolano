@@ -5,6 +5,9 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import { loginUser } from "@/lib/firebase/admin/auth";
+import { useStore } from "zustand";
+import useSessionStore from "@/lib/zustand/userDataState";
+import { getUserIdFromCookie } from "@/lib/firebase/admin/auth";
 //import serverLog from "@/lib/serverlog";
 
 interface State {
@@ -48,6 +51,7 @@ const reducer = (state: State, action: Action): State => {
 const page = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const router = useRouter();
+  const { setSession, setUserUid } = useStore(useSessionStore);
 
   useEffect(() => {
     if (state.error) {
@@ -87,7 +91,12 @@ const page = () => {
           progress: undefined,
         });
         dispatch({ type: "RESET" }); // Clear the form
-        router.push("/jugadores"); // Redirect to dashboard or desired page
+        //add session state to zustand to control part of the components on the client
+        setSession(true);
+        const userId = await getUserIdFromCookie();
+        //save user ID to zustand
+        setUserUid(userId);
+        router.push("/profile"); // Redirect to profile
       } else {
         dispatch({ type: "SET_ERROR", payload: "Invalid email or password." });
       }

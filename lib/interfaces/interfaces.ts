@@ -30,7 +30,7 @@ export interface Profile {
   address?: string;
   age?: number;
   status?: string;
-  role?: string;
+  role?: "aprendiz" | "instructor" | "maestro";
   yearsInTheGame?: number;
   biography?: string;
   zipcode?: string;
@@ -41,6 +41,10 @@ export interface Profile {
   masterId?: string | null; // Optional reference to User (Firestore document ID)
   createdAt: Timestamp | number;
   updatedAt: Timestamp | number;
+  nationalIdNumber: string; // Added nationalIdNumber
+  photoUrl?: string;
+  country?: string;
+  disabled?: boolean;
 }
 
 // Patios

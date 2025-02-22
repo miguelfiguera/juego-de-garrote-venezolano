@@ -194,10 +194,31 @@ export const logoutUser = async () => {
       cookies().set(options);
     }
 
-    console.log("Successfully logged");
+    console.log("Session terminated.");
     return true;
   } catch (error) {
     console.error("Error logging out user:", error);
     return false;
+  }
+};
+
+// Get user ID from cookie
+export const getUserIdFromCookie = async () => {
+  try {
+    const session = cookies().get("session");
+    if (!session) {
+      return null;
+    }
+    const decodedToken = await adminAuth.verifySessionCookie(
+      session.value,
+      true
+    );
+    if (!decodedToken) {
+      return null;
+    }
+    return decodedToken.uid;
+  } catch (error) {
+    console.error("Error decoding token:", error);
+    return null;
   }
 };

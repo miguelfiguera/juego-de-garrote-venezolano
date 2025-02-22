@@ -1,12 +1,13 @@
+"use client";
+
 import React from "react";
-import { cookies } from "next/headers";
 import LogOutButton from "./LogOutButton";
-import Link from "next/link"; // Import Link
+import Link from "next/link"; // Import
+import useSessionStore from "@/lib/zustand/userDataState";
 
 function Navbar() {
-  const cookieStore = cookies();
-  const token = cookieStore.get("session"); // Directly use cookieStore
-  const hasValue = token?.value !== undefined && token?.value !== ""; //Check if cookie has value
+  const { session } = useSessionStore();
+  const hasValue = session;
 
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -53,21 +54,46 @@ function Navbar() {
                 </li>
                 <li>
                   <Link className="dropdown-item" href="/fundamentos/patio">
-                    Patio
+                    Que es un patio?
                   </Link>
                 </li>
                 <li>
                   <Link className="dropdown-item" href="/fundamentos/tejido">
-                    Tejido
-                  </Link>
-                </li>
-                <li>
-                  <Link className="dropdown-item" href="/fundamentos/garrote">
-                    Garrote
+                    Tejido del garrote
                   </Link>
                 </li>
               </ul>
             </li>
+            {hasValue && (
+              <li className="nav-item dropdown">
+                <a
+                  className="nav-link dropdown-toggle"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Usuario
+                </a>
+                <ul className="dropdown-menu">
+                  {/*                 <li>
+                  <Link className="dropdown-item" href="/productos">
+                    Productos
+                  </Link>
+                </li> */}
+                  <li>
+                    <Link className="dropdown-item" href="/patios">
+                      Patio
+                    </Link>
+                  </li>
+                  <li>
+                    <Link className="dropdown-item" href="/profile">
+                      Perfil
+                    </Link>
+                  </li>
+                </ul>
+              </li>
+            )}
             <li className="nav-item">
               <Link className="nav-link" href="/jugadores">
                 Jugadores
