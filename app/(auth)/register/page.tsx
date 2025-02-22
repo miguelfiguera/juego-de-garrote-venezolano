@@ -4,6 +4,7 @@ import React, { useReducer } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "react-toastify";
+import { createUser, searchUserByEmail } from "@/lib/firebase/admin/auth";
 
 interface State {
   email: string;
@@ -12,6 +13,8 @@ interface State {
   agreeTerms: boolean; // Added agreeTerms
   loading: boolean;
   error: string | null;
+  name: string;
+  lastName: string;
 }
 
 type Action =
@@ -21,6 +24,8 @@ type Action =
   | { type: "SET_AGREE_TERMS"; payload: boolean } // Added SET_AGREE_TERMS
   | { type: "SET_LOADING"; payload: boolean }
   | { type: "SET_ERROR"; payload: string | null }
+  | { type: "SET_NAME"; payload: string }
+  | { type: "SET_LASTNAME"; payload: string }
   | { type: "RESET" };
 
 const initialState: State = {
@@ -30,6 +35,8 @@ const initialState: State = {
   agreeTerms: false, // Initial state for terms agreement
   loading: false,
   error: null,
+  name: "",
+  lastName: "",
 };
 
 const reducer = (state: State, action: Action): State => {
@@ -44,6 +51,10 @@ const reducer = (state: State, action: Action): State => {
       return { ...state, agreeTerms: action.payload };
     case "SET_LOADING":
       return { ...state, loading: action.payload };
+    case "SET_NAME":
+      return { ...state, name: action.payload };
+    case "SET_LASTNAME":
+      return { ...state, lastName: action.payload };
     case "SET_ERROR":
       return { ...state, error: action.payload };
     case "RESET":
@@ -63,7 +74,16 @@ const page = () => {
     dispatch({ type: "SET_ERROR", payload: null });
 
     if (state.password !== state.confirmPassword) {
-      dispatch({ type: "SET_ERROR", payload: "Passwords do not match." });
+      dispatch({ type: "SET_ERROR", payload: "Las contraseñas no coinciden." });
+      dispatch({ type: "SET_LOADING", payload: false });
+      return;
+    }
+
+    if (state.password.length < 6) {
+      dispatch({
+        type: "SET_ERROR",
+        payload: "La contraseña debe tener al menos 6 caracteres",
+      });
       dispatch({ type: "SET_LOADING", payload: false });
       return;
     }
@@ -78,8 +98,23 @@ const page = () => {
     }
 
     try {
-      // Simulate a registration request (replace with your actual registration logic)
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Check if the email already exists
+      const userExists = await searchUserByEmail(state.email);
+      if (userExists) {
+        dispatch({
+          type: "SET_ERROR",
+          payload: "El correo electrónico ya está registrado.",
+        });
+        dispatch({ type: "SET_LOADING", payload: false });
+        return;
+      }
+      // creates user
+      const newUser = await createUser(
+        state.email,
+        state.password,
+        state.name,
+        state.lastName
+      );
 
       // In a real application, you would send the email and password to your
       // backend to create the user.
@@ -121,6 +156,34 @@ const page = () => {
             )}
 
             <form onSubmit={handleSubmit}>
+              <div className="mb-3">
+                <label htmlFor="name" className="form-label">
+                  Nombre:
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="name"
+                  onChange={(e) =>
+                    dispatch({ type: "SET_NAME", payload: e.target.value })
+                  }
+                  required
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="lastName" className="form-label">
+                  Apellido:
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="lastName"
+                  onChange={(e) =>
+                    dispatch({ type: "SET_LASTNAME", payload: e.target.value })
+                  }
+                  required
+                />
+              </div>
               <div className="mb-3">
                 <label htmlFor="email" className="form-label">
                   Email:

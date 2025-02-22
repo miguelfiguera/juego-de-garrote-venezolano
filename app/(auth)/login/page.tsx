@@ -4,6 +4,8 @@ import React, { useReducer, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "react-toastify";
+import { loginUser } from "@/lib/firebase/admin/auth";
+//import serverLog from "@/lib/serverlog";
 
 interface State {
   email: string;
@@ -68,9 +70,12 @@ const page = () => {
 
     try {
       // Simulate an authentication request (replace with your actual authentication logic)
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate delay
+      const session = await loginUser(state.email, state.password); // Simulate delay
 
-      if (state.email === "test@example.com" && state.password === "password") {
+      // Check if authentication was successful
+      /* serverLog(String(session));
+      toast.success("Login successful!"); */
+      if (session) {
         // Successful login - you'd typically store a token or user info here
         toast.success("Login successful!", {
           position: "top-right",
@@ -82,7 +87,7 @@ const page = () => {
           progress: undefined,
         });
         dispatch({ type: "RESET" }); // Clear the form
-        router.push("/dashboard"); // Redirect to dashboard or desired page
+        router.push("/jugadores"); // Redirect to dashboard or desired page
       } else {
         dispatch({ type: "SET_ERROR", payload: "Invalid email or password." });
       }

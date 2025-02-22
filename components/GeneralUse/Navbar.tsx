@@ -1,12 +1,19 @@
 import React from "react";
+import { cookies } from "next/headers";
+import LogOutButton from "./LogOutButton";
+import Link from "next/link"; // Import Link
 
 function Navbar() {
+  const cookieStore = cookies();
+  const token = cookieStore.get("session"); // Directly use cookieStore
+  const hasValue = token?.value !== undefined && token?.value !== ""; //Check if cookie has value
+
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container-fluid">
-        <a className="navbar-brand" href="/">
+        <Link className="navbar-brand" href="/">
           J.G.V.
-        </a>
+        </Link>
         <button
           className="navbar-toggler"
           type="button"
@@ -35,56 +42,50 @@ function Navbar() {
               </a>
               <ul className="dropdown-menu">
                 <li>
-                  <a className="dropdown-item" href="/fundamentos/historia">
-                    Historia{" "}
-                  </a>
+                  <Link className="dropdown-item" href="/fundamentos/historia">
+                    Historia
+                  </Link>
                 </li>
                 <li>
-                  <a className="dropdown-item" href="/fundamentos/glosario">
-                    Glosario{" "}
-                  </a>
+                  <Link className="dropdown-item" href="/fundamentos/glosario">
+                    Glosario
+                  </Link>
                 </li>
                 <li>
-                  <a className="dropdown-item" href="/fundamentos/patio">
+                  <Link className="dropdown-item" href="/fundamentos/patio">
                     Patio
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a className="dropdown-item" href="/fundamentos/tejido">
-                    Tejido{" "}
-                  </a>
+                  <Link className="dropdown-item" href="/fundamentos/tejido">
+                    Tejido
+                  </Link>
                 </li>
                 <li>
-                  <a className="dropdown-item" href="/fundamentos/garrote">
-                    Garrote{" "}
-                  </a>
+                  <Link className="dropdown-item" href="/fundamentos/garrote">
+                    Garrote
+                  </Link>
                 </li>
               </ul>
             </li>
-            {/*             <li className="nav-item">
-              <a className="nav-link active" aria-current="page" href="#">
-                Blog
-              </a>
-            </li>{" "} */}
-            {/*             <li className="nav-item">
-              <a className="nav-link" href="#">
-                Tienda
-              </a>
-            </li> */}
             <li className="nav-item">
-              <a className="nav-link" href="/jugadores">
+              <Link className="nav-link" href="/jugadores">
                 Jugadores
-              </a>
+              </Link>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="/patios">
+              <Link className="nav-link" href="/patios">
                 Patios
-              </a>
+              </Link>
             </li>
             <li className="nav-item">
-              <a className="nav-link " href="/login">
-                Iniciar Sesion
-              </a>
+              {hasValue ? (
+                <LogOutButton /> // Render LogOutButton if cookie exists
+              ) : (
+                <Link className="nav-link" href="/login">
+                  Iniciar Sesion
+                </Link>
+              )}
             </li>
           </ul>
         </div>
