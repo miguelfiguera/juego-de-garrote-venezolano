@@ -68,6 +68,11 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile }) => {
             <strong>Rol:</strong> {profile.role}
           </p>
         )}
+        {profile.style && (
+          <p className="card-text">
+            <strong>Estilo:</strong> {profile.style}
+          </p>
+        )}
       </div>
     </div>
   );
