@@ -8,6 +8,7 @@ import { loginUser } from "@/lib/firebase/admin/auth";
 import { useStore } from "zustand";
 import useSessionStore from "@/lib/zustand/userDataState";
 import { getUserIdFromCookie } from "@/lib/firebase/admin/auth";
+import Error from "next/error";
 //import serverLog from "@/lib/serverlog";
 
 interface State {
@@ -48,7 +49,7 @@ const reducer = (state: State, action: Action): State => {
   }
 };
 
-const page = () => {
+const Page = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const router = useRouter();
   const { setSession, setUserUid } = useStore(useSessionStore);
@@ -100,11 +101,18 @@ const page = () => {
       } else {
         dispatch({ type: "SET_ERROR", payload: "Invalid email or password." });
       }
-    } catch (error: any) {
-      dispatch({
-        type: "SET_ERROR",
-        payload: error.message || "Login failed.",
-      });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        dispatch({
+          type: "SET_ERROR",
+          payload: error.toString() || "Login failed.",
+        });
+      } else {
+        dispatch({
+          type: "SET_ERROR",
+          payload: "Error desconocido, contactar al administrador.",
+        });
+      }
     } finally {
       dispatch({ type: "SET_LOADING", payload: false });
     }
@@ -177,4 +185,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
