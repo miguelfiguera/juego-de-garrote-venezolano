@@ -17,7 +17,6 @@ export interface Profile {
   style?: string;
   photoUrl?: string;
   country?: string;
-  key: string; // To allow potential other properties
 }
 
 interface ProfileCardProps {

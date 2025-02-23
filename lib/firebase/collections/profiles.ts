@@ -18,9 +18,12 @@ export async function index(): Promise<Profile[]> {
       (doc) => ({ id: doc.id, ...doc.data() } as Profile)
     );
     return profiles;
-  } catch (error: any) {
-    console.error("Error fetching profiles:", error);
-    throw new Error(error.message || "Failed to fetch profiles"); // Re-throw for handling in UI
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error(error.message || "Failed to fetch profiles");
+    } else {
+      throw new Error("An unknown error occurred");
+    }
   }
 }
 
@@ -41,11 +44,15 @@ export async function show(userId: string): Promise<Profile | null> {
     // Assuming there's only one profile per userId, get the first (and only) doc
     const doc = snapshot.docs[0];
     return { id: doc.id, ...doc.data() } as Profile;
-  } catch (error: any) {
-    console.error(`Error fetching profile for userId ${userId}:`, error);
-    throw new Error(
-      error.message || `Failed to fetch profile for userId ${userId}`
-    );
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(`Error fetching profile for userId ${userId}:`, error);
+      throw new Error(
+        error.message || `Error fetching profile for userId ${userId}`
+      );
+    } else {
+      throw new Error("An unknown error occurred");
+    }
   }
 }
 
@@ -63,9 +70,13 @@ export async function create(
     });
     revalidatePath("/profiles"); // Revalidate the profiles list
     return docRef.id; // Return the new document's ID
-  } catch (error: any) {
-    console.error("Error creating profile:", error);
-    throw new Error(error.message || "Failed to create profile");
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Error creating profile:", error);
+      throw new Error(error.message || `Error creating profile ${error}`);
+    } else {
+      throw new Error("An unknown error occurred");
+    }
   }
 }
 // To update a profile
@@ -84,9 +95,15 @@ export async function update(
       });
     revalidatePath(`/profiles/${id}`); // Revalidate the specific profile page
     revalidatePath("/profiles"); // Revalidate the profiles list (if it displays updated info)
-  } catch (error: any) {
-    console.error(`Error updating profile with ID ${id}:`, error);
-    throw new Error(error.message || `Failed to update profile with ID ${id}`);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(`Error updating profile with ID ${id}:`, error);
+      throw new Error(
+        error.message || `Failed to update profile with ID ${id}`
+      );
+    } else {
+      throw new Error("An unknown error occurred");
+    }
   }
 }
 
@@ -97,8 +114,14 @@ export async function destroy(id: string): Promise<void> {
     await adminDb.collection(PROFILES_COLLECTION).doc(id).delete();
     revalidatePath("/profiles"); // Revalidate the profiles list
     redirect("/profiles"); // Redirect back to the profiles list
-  } catch (error: any) {
-    console.error(`Error deleting profile with ID ${id}:`, error);
-    throw new Error(error.message || `Failed to delete profile with ID ${id}`);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(`Error deleting profile with ID ${id}:`, error);
+      throw new Error(
+        error.message || `Failed to delete profile with ID ${id}`
+      );
+    } else {
+      throw new Error("An unknown error occurred");
+    }
   }
 }

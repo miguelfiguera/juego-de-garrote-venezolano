@@ -7,8 +7,12 @@ import { toast } from "react-toastify";
 import { loginUser } from "@/lib/firebase/admin/auth";
 import { useStore } from "zustand";
 import useSessionStore from "@/lib/zustand/userDataState";
-import { getUserIdFromCookie } from "@/lib/firebase/admin/auth";
+import {
+  getUserIdFromCookie,
+  getUserCustomClaims,
+} from "@/lib/firebase/admin/auth";
 import Error from "next/error";
+import useCustomClaimStore from "@/lib/zustand/customClaimStore";
 //import serverLog from "@/lib/serverlog";
 
 interface State {
@@ -53,6 +57,7 @@ const Page = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const router = useRouter();
   const { setSession, setUserUid } = useStore(useSessionStore);
+  const { setCustomClaims } = useStore(useCustomClaimStore);
 
   useEffect(() => {
     if (state.error) {
@@ -97,6 +102,15 @@ const Page = () => {
         const userId = await getUserIdFromCookie();
         //save user ID to zustand
         setUserUid(userId);
+        if (userId !== null) {
+          const customClaims = await getUserCustomClaims(userId);
+          if (customClaims !== null && customClaims !== undefined) {
+            setCustomClaims(customClaims);
+          } else {
+            toast.error("Error al obtener autorizacion de usuario");
+          }
+        }
+
         router.push("/profile"); // Redirect to profile
       } else {
         dispatch({ type: "SET_ERROR", payload: "Invalid email or password." });

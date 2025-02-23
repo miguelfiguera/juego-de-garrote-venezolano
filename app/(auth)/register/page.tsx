@@ -108,16 +108,9 @@ const Page = () => {
         dispatch({ type: "SET_LOADING", payload: false });
         return;
       }
-      // creates user
-      const newUser = await createUser(
-        state.email,
-        state.password,
-        state.name,
-        state.lastName
-      );
-
-      // In a real application, you would send the email and password to your
-      // backend to create the user.
+      // creates user saving credentials on firebase
+      /* const newUser = */
+      await createUser(state.email, state.password, state.name, state.lastName);
 
       toast.success("Registration successful!", {
         position: "top-right",
@@ -131,11 +124,18 @@ const Page = () => {
 
       dispatch({ type: "RESET" });
       router.push("/login"); // Redirect to login Page after successful registration
-    } catch (error: any) {
-      dispatch({
-        type: "SET_ERROR",
-        payload: error.message || "Registration failed.",
-      });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        dispatch({
+          type: "SET_ERROR",
+          payload: error.toString() || "Login failed.",
+        });
+      } else {
+        dispatch({
+          type: "SET_ERROR",
+          payload: "Error desconocido, contactar al administrador.",
+        });
+      }
     } finally {
       dispatch({ type: "SET_LOADING", payload: false });
     }

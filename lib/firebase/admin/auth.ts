@@ -60,6 +60,19 @@ export interface Claims {
   jugador: boolean;
 }
 
+//get custom claims
+
+export const getUserCustomClaims = async (uid: string) => {
+  try {
+    const user = await adminAuth.getUser(uid);
+    console.log("Successfully got custom claims:", user.customClaims);
+    return user.customClaims as Claims;
+  } catch (error) {
+    console.error("Error getting custom claims:", error);
+    return null;
+  }
+};
+
 // modify customClaims so each user can add public roles
 export const modifyCustomClaims = async (uid: string, claims: Claims) => {
   try {
@@ -151,13 +164,14 @@ export const loginUser = async (email: string, password: string) => {
     const sessionCookie = await adminAuth.createSessionCookie(idToken, {
       expiresIn: expirationTime,
     });
+
     const options = {
       name: "session",
       value: sessionCookie,
       maxAge: expirationTime,
       httpOnly: true,
       secure: true,
-      sameSite: "strict" as "strict",
+      sameSite: "strict" as const,
     };
     cookies().set(options);
     console.log("Successfully logged in user:", user.user);
@@ -211,7 +225,7 @@ export const logoutUser = async () => {
         maxAge: 0,
         httpOnly: true,
         secure: true,
-        sameSite: "strict" as "strict",
+        sameSite: "strict" as const,
       };
       cookies().set(options);
     }
