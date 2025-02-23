@@ -35,6 +35,8 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile }) => {
           className="card-img-left img-fluid rounded-5"
           alt="Foto de Perfil"
           style={{ objectFit: "cover", width: "100px", height: "100px" }}
+          width={100}
+          height={100}
         />
       ) : (
         <div

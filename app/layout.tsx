@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Raleway } from "@next/font/google";
+import { Raleway } from "next/font/google";
 import { ToastContainer } from "react-toastify";
 import Navbar from "@/components/GeneralUse/Navbar";
 import Footer from "@/components/GeneralUse/Footer";

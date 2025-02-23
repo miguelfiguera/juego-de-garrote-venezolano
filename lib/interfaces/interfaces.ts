@@ -51,6 +51,7 @@ export interface Profile {
 export interface Patio {
   id: string; // Firestore document ID
   masterId: string; // Reference to User (Firestore document ID) - Master
+  masterName: string;
   name: string;
   address: string;
   zipCode: string;
