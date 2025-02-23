@@ -77,7 +77,7 @@ se limita al uso de las mismas, ya que una persona sin ningún arma puede defend
 
           {/* Image */}
           <div className="mb-3">
-            <img
+            <Image
               src={imageUrl}
               alt={imageAlt}
               className="img-fluid rounded"
@@ -93,7 +93,7 @@ se limita al uso de las mismas, ya que una persona sin ningún arma puede defend
           {parseText(text)}
 
           <div className="mb-3">
-            <img
+            <Image
               src={imageUrl}
               alt={imageAlt}
               className="img-fluid rounded"
@@ -106,7 +106,7 @@ se limita al uso de las mismas, ya que una persona sin ningún arma puede defend
           </div>
           {parseText(text2)}
           <div className="mb-3">
-            <img
+            <Image
               src={imageUrl}
               alt={imageAlt}
               className="img-fluid rounded"

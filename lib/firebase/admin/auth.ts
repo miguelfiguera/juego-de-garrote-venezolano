@@ -3,6 +3,7 @@ import { adminAuth } from "@/lib/firebase/admin/firebaseAdmin";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase/firebase";
 import { cookies } from "next/headers";
+import { Profile } from "@/lib/interfaces/interfaces";
 
 // This are the main functions to create users and modify users.
 
@@ -49,8 +50,18 @@ export const createUser = async (
   }
 };
 
+// interface for claims
+export interface Claims {
+  admin: boolean;
+  master: boolean;
+  blogger: boolean;
+  seller: boolean;
+  investigator: boolean;
+  jugador: boolean;
+}
+
 // modify customClaims so each user can add public roles
-export const modifyCustomClaims = async (uid: string, claims: any) => {
+export const modifyCustomClaims = async (uid: string, claims: Claims) => {
   try {
     await adminAuth.setCustomUserClaims(uid, claims);
     return true;
@@ -73,7 +84,7 @@ export const getAllUsers = async () => {
 };
 
 //Update User (including password changes)
-export const updateUser = async (uid: string, data: any) => {
+export const updateUser = async (uid: string, data: Profile) => {
   try {
     await adminAuth.updateUser(uid, data);
     console.log("Successfully updated user:", uid);

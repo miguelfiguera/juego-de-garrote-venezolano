@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 
 export interface Profile {
   id: string;
@@ -16,7 +17,7 @@ export interface Profile {
   style?: string;
   photoUrl?: string;
   country?: string;
-  [key: string]: any; // To allow potential other properties
+  key: string; // To allow potential other properties
 }
 
 interface ProfileCardProps {
@@ -30,7 +31,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile }) => {
       style={{ width: "75%" }}
     >
       {profile.photoUrl ? (
-        <img
+        <Image
           src={profile.photoUrl}
           className="card-img-left img-fluid rounded-5"
           alt="Foto de Perfil"

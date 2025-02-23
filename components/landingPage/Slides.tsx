@@ -1,3 +1,4 @@
+import Image from "next/image";
 function Slides() {
   return (
     <div
@@ -7,13 +8,13 @@ function Slides() {
     >
       <div className="carousel-inner">
         <div className="carousel-item active">
-          <img src="..." className="d-block w-100" alt="..." />
+          <Image src="..." className="d-block w-100" alt="..." />
         </div>
         <div className="carousel-item">
-          <img src="..." className="d-block w-100" alt="..." />
+          <Image src="..." className="d-block w-100" alt="..." />
         </div>
         <div className="carousel-item">
-          <img src="..." className="d-block w-100" alt="..." />
+          <Image src="..." className="d-block w-100" alt="..." />
         </div>
       </div>
       <button

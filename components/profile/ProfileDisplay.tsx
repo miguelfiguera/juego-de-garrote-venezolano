@@ -2,6 +2,7 @@
 import React from "react";
 import { destroy } from "@/lib/firebase/collections/profiles";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export interface Profile {
   id: string;
@@ -54,7 +55,7 @@ const ProfileDisplay: React.FC<ProfileInfoProps> = ({ profile }) => {
         <div className="col-md-4">
           {/* Profile Picture */}
           {profile.profilePictureUrl ? (
-            <img
+            <Image
               src={profile.profilePictureUrl}
               alt="Foto de Perfil"
               className="img-fluid rounded-circle"

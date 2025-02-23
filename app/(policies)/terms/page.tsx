@@ -85,11 +85,11 @@ const page = () => {
 
           <h2>6. Exclusión de Garantías</h2>
           <p>
-            Este sitio web se proporciona "tal cual" y "según disponibilidad",
-            sin garantías de ningún tipo, ya sean expresas o implícitas,
-            incluyendo, pero no limitado a, garantías de comerciabilidad,
-            idoneidad para un propósito particular, no infracción o curso de
-            desempeño.
+            Este sitio web se proporciona &quot;tal cual&quot; y &quot;según
+            disponibilidad&quot;, sin garantías de ningún tipo, ya sean expresas
+            o implícitas, incluyendo, pero no limitado a, garantías de
+            comerciabilidad, idoneidad para un propósito particular, no
+            infracción o curso de desempeño.
           </p>
 
           <h2>7. Ley Aplicable</h2>

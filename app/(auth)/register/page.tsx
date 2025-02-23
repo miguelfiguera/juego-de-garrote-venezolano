@@ -64,7 +64,7 @@ const reducer = (state: State, action: Action): State => {
   }
 };
 
-const page = () => {
+const Page = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const router = useRouter();
 
@@ -130,7 +130,7 @@ const page = () => {
       });
 
       dispatch({ type: "RESET" });
-      router.push("/login"); // Redirect to login page after successful registration
+      router.push("/login"); // Redirect to login Page after successful registration
     } catch (error: any) {
       dispatch({
         type: "SET_ERROR",
@@ -290,4 +290,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

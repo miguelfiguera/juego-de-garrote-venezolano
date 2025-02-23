@@ -170,11 +170,18 @@ const ProfileForm = () => {
 
       dispatch({ type: "RESET" });
       router.push("/profile");
-    } catch (error: any) {
-      dispatch({
-        type: "SET_ERROR",
-        payload: error.message || "Fallo al crear perfil",
-      });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        dispatch({
+          type: "SET_ERROR",
+          payload: error.toString() || "Login failed.",
+        });
+      } else {
+        dispatch({
+          type: "SET_ERROR",
+          payload: "Error desconocido, contactar al administrador.",
+        });
+      }
     } finally {
       dispatch({ type: "SET_CARGANDO", payload: false });
     }
