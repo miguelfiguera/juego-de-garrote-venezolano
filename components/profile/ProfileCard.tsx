@@ -32,9 +32,9 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile }) => {
       {profile.photoUrl ? (
         <Image
           src={profile.photoUrl}
-          className="card-img-left img-fluid rounded-5"
+          className="card-img-left img-fluid rounded-5 p-3"
           alt="Foto de Perfil"
-          style={{ objectFit: "cover", width: "100px", height: "100px" }}
+          style={{ objectFit: "cover", minWidth: "350px", minHeight: "350px" }}
           width={100}
           height={100}
         />
@@ -47,7 +47,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile }) => {
         </div>
       )}
       <div className="card-body">
-        <h5 className="card-title">
+        <h5 className="card-title fw-bold border-bottom my-2">
           {profile.name} {profile.lastname}
         </h5>
         {profile.country && (

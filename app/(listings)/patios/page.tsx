@@ -26,7 +26,7 @@ async function Page() {
   return (
     <div className="container">
       <h1 className="text-center fw-bold mt-5 mb-3 pt-5 pb-3">Patios</h1>
-      <div className="row"></div>
+      <div className="row">{patioCards}</div>
     </div>
   );
 }

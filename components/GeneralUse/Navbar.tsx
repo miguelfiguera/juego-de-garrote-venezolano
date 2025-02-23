@@ -4,9 +4,11 @@ import React from "react";
 import LogOutButton from "./LogOutButton";
 import Link from "next/link"; // Import
 import useSessionStore from "@/lib/zustand/userDataState";
+import useCustomClaimStore from "@/lib/zustand/customClaimStore";
 
 function Navbar() {
   const { session } = useSessionStore();
+  const { customClaims } = useCustomClaimStore();
   const hasValue = session;
 
   return (
@@ -39,7 +41,7 @@ function Navbar() {
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                Fundamentos
+                Sobre el Juego
               </a>
               <ul className="dropdown-menu">
                 <li>
@@ -47,21 +49,36 @@ function Navbar() {
                     Historia
                   </Link>
                 </li>
-                <li>
+                {/*                 <li>
                   <Link className="dropdown-item" href="/fundamentos/glosario">
                     Glosario
                   </Link>
-                </li>
+                </li> */}
                 <li>
                   <Link className="dropdown-item" href="/fundamentos/patio">
                     Que es un patio?
                   </Link>
                 </li>
                 <li>
+                  <Link className="dropdown-item" href="/fundamentos/patio">
+                    Lista de Investigaciones
+                  </Link>
+                </li>
+                <li>
+                  <Link className="dropdown-item" href="/fundamentos/patio">
+                    Publicaciones
+                  </Link>
+                </li>
+                <li>
+                  <Link className="dropdown-item" href="/fundamentos/patio">
+                    Blog
+                  </Link>
+                </li>
+                {/*                 <li>
                   <Link className="dropdown-item" href="/fundamentos/tejido">
                     Tejido del garrote
                   </Link>
-                </li>
+                </li> */}
               </ul>
             </li>
             {hasValue && (
@@ -91,6 +108,13 @@ function Navbar() {
                       Perfil
                     </Link>
                   </li>
+                  {customClaims?.admin == true && (
+                    <li className="nav-item">
+                      <Link className="nav-link" href="/admin">
+                        Admin
+                      </Link>
+                    </li>
+                  )}
                 </ul>
               </li>
             )}
@@ -104,6 +128,7 @@ function Navbar() {
                 Patios
               </Link>
             </li>
+
             <li className="nav-item">
               {hasValue ? (
                 <LogOutButton /> // Render LogOutButton if cookie exists
