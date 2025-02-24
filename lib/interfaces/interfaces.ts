@@ -106,11 +106,25 @@ export interface Publication {
   updatedAt: Timestamp | number;
 }
 
+export interface Investigation {
+  id: string; // Firestore document ID
+  adminId: string; // Reference to Admin (Firestore document ID)
+  title: string;
+  review: string;
+  originalUrl?: string;
+  file?: string; // Assuming you store the file URL in Firebase Storage
+  status: "pending" | "payed" | "canceled" | "error" | "funding";
+  createdAt: Timestamp | number;
+  updatedAt: Timestamp | number;
+}
+
 // Posts
 export interface Post {
   id: string; // Firestore document ID
   userId: string; // Reference to User (Firestore document ID)
+  authorName: string;
   title: string;
+  resume: string;
   text: string;
   createdAt: Timestamp | number;
   updatedAt: Timestamp | number;
