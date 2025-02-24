@@ -1,14 +1,37 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import LogOutButton from "./LogOutButton";
 import Link from "next/link"; // Import
 import useSessionStore from "@/lib/zustand/userDataState";
 import useCustomClaimStore from "@/lib/zustand/customClaimStore";
+import {
+  getUserCustomClaims,
+  getUserIdFromCookie,
+} from "@/lib/firebase/admin/auth";
 
 function Navbar() {
-  const { session } = useSessionStore();
-  const { customClaims } = useCustomClaimStore();
+  const { session, setSession, setUserUid } = useSessionStore();
+  const { customClaims, setCustomClaims } = useCustomClaimStore();
+
+  //in zustand, a refresh may erase the state, so this is a fix from clientside
+  // we are using navbar as navbar is always visible.
+  useEffect(() => {
+    async function setZustandStates() {
+      const result1 = await getUserIdFromCookie();
+      if (!result1) return;
+      setUserUid(result1);
+      setSession(true);
+
+      const result2 = await getUserCustomClaims(result1);
+      if (result2) {
+        setCustomClaims(result2);
+      }
+    }
+
+    setZustandStates();
+  }, []);
+
   const hasValue = session;
 
   return (
@@ -100,7 +123,7 @@ function Navbar() {
                 </li> */}
                   <li>
                     <Link className="dropdown-item" href="/patios">
-                      Patio
+                      Mi Patio
                     </Link>
                   </li>
                   <li>
@@ -109,9 +132,16 @@ function Navbar() {
                     </Link>
                   </li>
                   {customClaims?.admin == true && (
-                    <li className="nav-item">
-                      <Link className="nav-link" href="/admin">
+                    <li>
+                      <Link className="dropdown-item" href="/admin">
                         Admin
+                      </Link>
+                    </li>
+                  )}
+                  {hasValue && (
+                    <li>
+                      <Link className="dropdown-item" href="/admin">
+                        <LogOutButton />
                       </Link>
                     </li>
                   )}
@@ -130,9 +160,7 @@ function Navbar() {
             </li>
 
             <li className="nav-item">
-              {hasValue ? (
-                <LogOutButton /> // Render LogOutButton if cookie exists
-              ) : (
+              {!hasValue && (
                 <Link className="nav-link" href="/login">
                   Iniciar Sesion
                 </Link>

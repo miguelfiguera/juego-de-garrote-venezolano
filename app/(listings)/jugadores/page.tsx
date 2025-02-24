@@ -25,7 +25,9 @@ async function Page() {
 
   return (
     <div className="container">
-      <h1 className="text-center fw-bold mt-5 mb-3 pt-5 pb-3">Jugadores</h1>
+      <h1 className="text-center fw-bold mt-5 mb-3 pt-5 pb-3 border-bottom">
+        Jugadores
+      </h1>
       <div className="row">{profileCards}</div>
     </div>
   );

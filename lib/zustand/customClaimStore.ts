@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Claims } from "../firebase/admin/auth";
+import { Claims } from "@/lib/interfaces/interfaces";
 
 interface CustomClaimState {
   customClaims: Claims | null;

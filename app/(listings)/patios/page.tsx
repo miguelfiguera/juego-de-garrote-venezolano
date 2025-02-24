@@ -11,7 +11,7 @@ async function Page() {
 
   if (patios.length === 0) {
     return (
-      <div className="container">
+      <div className="container my-4">
         <h1 className="text-center fw-bold mt-5 mb-3 pt-5 pb-3">Patios</h1>
         <div className="">
           {" "}
@@ -25,7 +25,9 @@ async function Page() {
 
   return (
     <div className="container">
-      <h1 className="text-center fw-bold mt-5 mb-3 pt-5 pb-3">Patios</h1>
+      <h1 className="text-center fw-bold mt-5 mb-3 pt-5 pb-3 border-bottom">
+        Patios
+      </h1>
       <div className="row">{patioCards}</div>
     </div>
   );

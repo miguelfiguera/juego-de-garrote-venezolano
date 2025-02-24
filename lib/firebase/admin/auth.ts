@@ -4,6 +4,8 @@ import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase/firebase";
 import { cookies } from "next/headers";
 import { Profile } from "@/lib/interfaces/interfaces";
+import { Claims } from "@/lib/interfaces/interfaces";
+import { revalidatePath } from "next/cache";
 
 // This are the main functions to create users and modify users.
 
@@ -50,16 +52,6 @@ export const createUser = async (
   }
 };
 
-// interface for claims
-export interface Claims {
-  admin: boolean;
-  master: boolean;
-  blogger: boolean;
-  seller: boolean;
-  investigator: boolean;
-  jugador: boolean;
-}
-
 //get custom claims
 
 export const getUserCustomClaims = async (uid: string) => {
@@ -77,6 +69,7 @@ export const getUserCustomClaims = async (uid: string) => {
 export const modifyCustomClaims = async (uid: string, claims: Claims) => {
   try {
     await adminAuth.setCustomUserClaims(uid, claims);
+    revalidatePath("/profile");
     return true;
   } catch (error) {
     console.error("Error modifying custom claims:", error);

@@ -3,26 +3,7 @@ import React from "react";
 import { destroy } from "@/lib/firebase/collections/profiles";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-
-export interface Profile {
-  id: string;
-  name?: string;
-  lastname?: string;
-  age?: number;
-  status?: string;
-  role?: "aprendiz" | "instructor" | "maestro";
-  yearsInTheGame?: number;
-  biography?: string;
-  zipcode?: string;
-  phone?: string;
-  email?: string;
-  style?: string;
-  userId: string;
-  masterId?: string | null;
-  nationalIdNumber: string;
-  profilePictureUrl?: string; // URL for the profile picture
-  country?: string;
-}
+import { Profile } from "@/lib/interfaces/interfaces";
 
 interface ProfileInfoProps {
   profile: Profile | null;
@@ -54,12 +35,14 @@ const ProfileDisplay: React.FC<ProfileInfoProps> = ({ profile }) => {
       <div className="row">
         <div className="col-md-4">
           {/* Profile Picture */}
-          {profile.profilePictureUrl ? (
+          {profile.photoUrl ? (
             <Image
-              src={profile.profilePictureUrl}
+              src={profile.photoUrl}
               alt="Foto de Perfil"
               className="img-fluid rounded-circle"
-              style={{ width: "200px", height: "200px", objectFit: "cover" }}
+              width={350}
+              height={350}
+              style={{ width: "350px", height: "350px", objectFit: "cover" }}
             />
           ) : (
             <div
@@ -168,18 +151,18 @@ const ProfileDisplay: React.FC<ProfileInfoProps> = ({ profile }) => {
               <strong>ID de Maestro:</strong> {profile.masterId}
             </p>
           )}
-        </div>
 
-        <div className="d-flex justify-content-center pb-4">
-          <button className="btn btn-primary mx-2" onClick={handleEdit}>
-            Editar
-          </button>
-          <button className="btn btn-warning  mx-2" onClick={handleDelete}>
-            Borrar Perfil
-          </button>
-          <button className="btn btn-danger  mx-2" onClick={handleDeactivate}>
-            Desactivar Cuenta
-          </button>
+          <div className="d-flex justify-content-center pb-2 border-top pt-4">
+            <button className="btn btn-primary mx-2" onClick={handleEdit}>
+              Editar
+            </button>
+            <button className="btn btn-warning  mx-2" onClick={handleDelete}>
+              Borrar Perfil
+            </button>
+            <button className="btn btn-danger  mx-2" onClick={handleDeactivate}>
+              Desactivar Cuenta
+            </button>
+          </div>
         </div>
       </div>
     </div>

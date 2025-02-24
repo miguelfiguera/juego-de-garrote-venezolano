@@ -3,7 +3,6 @@
 import { adminDb } from "../admin/firebaseAdmin";
 import { Profile } from "@/lib/interfaces/interfaces";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 
 const PROFILES_COLLECTION = "profiles"; // Define the collection name
 
@@ -68,7 +67,7 @@ export async function create(
       createdAt: now,
       updatedAt: now,
     });
-    revalidatePath("/profiles"); // Revalidate the profiles list
+    revalidatePath("/profile"); // Revalidate the profiles list
     return docRef.id; // Return the new document's ID
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -93,8 +92,7 @@ export async function update(
         ...profileData,
         updatedAt: now,
       });
-    revalidatePath(`/profiles/${id}`); // Revalidate the specific profile page
-    revalidatePath("/profiles"); // Revalidate the profiles list (if it displays updated info)
+    revalidatePath(`/profile`); // Revalidate the specific profile page
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error(`Error updating profile with ID ${id}:`, error);
@@ -112,8 +110,8 @@ export async function update(
 export async function destroy(id: string): Promise<void> {
   try {
     await adminDb.collection(PROFILES_COLLECTION).doc(id).delete();
-    revalidatePath("/profiles"); // Revalidate the profiles list
-    redirect("/profiles"); // Redirect back to the profiles list
+    //revalidatePath("/profile"); // Revalidate the profiles list
+    //redirect("/profile"); // Redirect back to the profiles list
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error(`Error deleting profile with ID ${id}:`, error);

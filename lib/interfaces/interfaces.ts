@@ -45,6 +45,8 @@ export interface Profile {
   photoUrl?: string;
   country?: string;
   disabled?: boolean;
+  patioId?: string | null;
+  patioStatus?: "pending" | "approved" | "denied" | null;
 }
 
 // Patios
@@ -132,4 +134,14 @@ export interface CheckOutBill {
   status: "pending" | "payed" | "canceled" | "error"; // Enum
   createdAt: Timestamp | number;
   updatedAt: Timestamp | number;
+}
+
+//firebase customClaims interface to handle user permissions and actions
+export interface Claims {
+  admin: boolean;
+  master: boolean;
+  blogger: boolean;
+  seller: boolean;
+  investigator: boolean;
+  jugador: boolean;
 }
