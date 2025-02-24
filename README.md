@@ -331,3 +331,225 @@ export const securityCheck = async (token: string) => {
 - **Consideraciones para Producción:**
   - Asegurarse de establecer correctamente las variables de entorno y la configuración de Firebase.
   - Revisar las políticas de seguridad y reglas de acceso en Firebase para evitar vulnerabilidades.
+
+# Documentación de las Funciones CRUD para /firebase/collections/
+
+Este documento describe el enfoque general de las funciones CRUD (Crear, Leer, Actualizar y Eliminar) utilizadas para gestionar todos los modelos presentes en la carpeta /firebase/collections en una aplicación que utiliza Firebase Firestore como base de datos.
+
+## NOTA IMPORTANTE:
+
+Escribir la misma documentacion por cada modelo es innecesario, asi que para simplificar la presentacion de estas funciones usaremos el modelo Investigacion.
+
+Algunos modelos tienen metodos propios, pero en su mayoria estan comentados en ingles para sostener el proyecto y recordarle al desarrollador la razon por la cual esto existe como existe.
+
+Las funciones incluidas son:
+
+1. **index**: Listar todas las investigaciones.
+2. **show**: Obtener una investigación específica por su ID.
+3. **create**: Crear una nueva investigación.
+4. **update**: Actualizar una investigación existente.
+5. **destroy**: Eliminar una investigación.
+
+Estas funciones son una estructura basica general para el manejo de data en firestore directamente desde el adminSDK para evitar exponer demasiada data al cliente.
+
+---
+
+## Inicialización
+
+Se define una constante para el nombre de la colección de Firestore donde se almacenan los datos:
+
+ejemplo:
+
+```typescript
+const INVESTIGATIONS_COLLECTION = "investigations";
+```
+
+Además, se importa `adminDb` para interactuar con la base de datos Firestore utilizando el SDK de administración de Firebase.
+
+---
+
+## 1. Función `index` (Listar Investigaciones)
+
+```typescript
+export async function index(): Promise<Investigation[]> { ... }
+```
+
+### Descripción
+
+La función `index` recupera y devuelve una lista de todas las investigaciones almacenadas en la colección `investigations`.
+
+### Detalles de Implementación
+
+- **Recuperación de Datos**: Utiliza `adminDb.collection(INVESTIGATIONS_COLLECTION).get()` para obtener todos los documentos de la colección.
+- **Transformación de Datos**: Mapea los documentos obtenidos a un arreglo de objetos del tipo `Investigation`, incluyendo el ID de cada documento.
+  ```typescript
+  const investigations: Investigation[] = snapshot.docs.map(
+    (doc) => ({ id: doc.id, ...doc.data() } as Investigation)
+  );
+  ```
+- **Manejo de Errores**: Utiliza un bloque `try-catch` para capturar y manejar cualquier error que ocurra durante la operación.
+
+---
+
+## 2. Función `show` (Mostrar una Investigación Específica)
+
+```typescript
+export async function show(investigationId: string): Promise<Investigation | null> { ... }
+```
+
+### Descripción
+
+La función `show` obtiene una investigación específica a partir de su ID.
+
+### Detalles de Implementación
+
+- **Recuperación de Datos**: Accede al documento con el ID proporcionado utilizando:
+  ```typescript
+  const doc = await adminDb
+    .collection(INVESTIGATIONS_COLLECTION)
+    .doc(investigationId)
+    .get();
+  ```
+- **Validación de Existencia**: Verifica si el documento existe. Si no existe, devuelve `null`.
+- **Transformación de Datos**: Si el documento existe, construye un objeto `Investigation` con el ID y los datos del documento.
+- **Manejo de Errores**: Controla y lanza errores descriptivos en caso de fallos durante la operación.
+
+---
+
+## 3. Función `create` (Crear una Nueva Investigación)
+
+```typescript
+export async function create(investigationData: Omit<Investigation, "id" | "createdAt" | "updatedAt">): Promise<string> { ... }
+```
+
+### Descripción
+
+La función `create` crea una nueva investigación en la base de datos y devuelve el ID del nuevo documento creado.
+
+### Detalles de Implementación
+
+- **Preparación de Datos**: Excluye los campos `id`, `createdAt` y `updatedAt` del objeto de datos recibido, ya que estos se generan automáticamente.
+- **Marcas de Tiempo**: Agrega campos `createdAt` y `updatedAt` con la marca de tiempo actual:
+  ```typescript
+  const now = Date.now();
+  ```
+- **Creación del Documento**: Añade un nuevo documento a la colección utilizando:
+  ```typescript
+  const docRef = await adminDb.collection(INVESTIGATIONS_COLLECTION).add({
+    ...investigationData,
+    createdAt: now,
+    updatedAt: now,
+  });
+  ```
+- **Revalidación de Rutas**: Llama a `revalidatePath("/investigaciones")` para actualizar el contenido en la aplicación si se utiliza ISR (Incremental Static Regeneration) o similar.
+- **Retorno**: Devuelve el ID del documento recién creado.
+- **Manejo de Errores**: Controla errores potenciales y proporciona mensajes descriptivos.
+
+---
+
+## 4. Función `update` (Actualizar una Investigación Existente)
+
+```typescript
+export async function update(id: string, investigationData: Omit<Investigation, "id" | "createdAt" | "updatedAt">): Promise<void> { ... }
+```
+
+### Descripción
+
+La función `update` actualiza los datos de una investigación existente identificada por su ID.
+
+### Detalles de Implementación
+
+- **Preparación de Datos**: Al igual que en `create`, excluye los campos `id`, `createdAt` y `updatedAt`.
+- **Actualización de Datos**: Utiliza `adminDb.collection(INVESTIGATIONS_COLLECTION).doc(id).update({...})` para actualizar el documento con los nuevos datos y la marca de tiempo actual en `updatedAt`.
+- **Revalidación de Rutas**:
+  - Actualiza la lista general de investigaciones: `revalidatePath("/investigaciones")`.
+  - Actualiza la página específica de la investigación actualizada: `revalidatePath(`/investigaciones/${id}`)`.
+- **Manejo de Errores**: Controla y lanza errores en caso de que la actualización falle.
+
+---
+
+## 5. Función `destroy` (Eliminar una Investigación)
+
+```typescript
+export async function destroy(id: string): Promise<void> { ... }
+```
+
+### Descripción
+
+La función `destroy` elimina una investigación de la base de datos utilizando su ID.
+
+### Detalles de Implementación
+
+- **Eliminación del Documento**: Utiliza `adminDb.collection(INVESTIGATIONS_COLLECTION).doc(id).delete()` para eliminar el documento.
+- **Revalidación de Rutas**: Llama a `revalidatePath("/investigaciones")` para actualizar la lista de investigaciones en la aplicación.
+- **Manejo de Errores**: Controla errores y proporciona mensajes específicos si la eliminación falla.
+
+---
+
+## Manejo Común de Errores
+
+En todas las funciones:
+
+- Se utiliza un bloque `try-catch` para capturar errores.
+- Se verifica si el error es una instancia de `Error` para proporcionar mensajes detallados.
+- Se registra el error en la consola con `console.error`.
+- Se lanza un nuevo `Error` para que pueda ser manejado por la función o componente que llamó.
+
+---
+
+## Revalidación de Rutas
+
+Las funciones `create`, `update` y `destroy` incluyen llamadas a `revalidatePath` para asegurar que la aplicación actualice la información presentada a los usuarios después de realizar cambios en la base de datos. Esto es especialmente relevante en aplicaciones que usan renderizado estático o generación estática incremental.
+
+- **Lista de Investigaciones**: Siempre se revalida la ruta `"/investigaciones"` para reflejar cambios en la lista general.
+- **Detalle de Investigación**: En la función `update`, también se revalida la ruta específica de la investigación actualizada.
+
+---
+
+## Resumen del Enfoque CRUD
+
+- **Create (Crear)**:
+
+  - Crea un nuevo documento en la colección `investigations`.
+  - Asigna marcas de tiempo para `createdAt` y `updatedAt`.
+  - Revalida las rutas necesarias para actualizar la interfaz de usuario.
+
+- **Read (Leer)**:
+
+  - **index**: Recupera todos los documentos de la colección y devuelve una lista de investigaciones.
+  - **show**: Recupera un documento específico basado en su ID.
+
+- **Update (Actualizar)**:
+
+  - Actualiza campos existentes en un documento identificado por su ID.
+  - Actualiza la marca de tiempo `updatedAt`.
+  - Revalida las rutas afectadas.
+
+- **Delete (Eliminar)**:
+  - Elimina un documento de la colección basado en su ID.
+  - Revalida la lista de investigaciones.
+
+---
+
+## Consideraciones Generales
+
+- **Seguridad**: Estas funciones se ejecutan en el servidor y utilizan el SDK de administración de Firebase, por lo que deben protegerse adecuadamente para evitar accesos no autorizados.
+- **Tipos de Datos**: Se utiliza el tipo `Investigation` para tipar los datos de las investigaciones. Se omiten ciertos campos en las operaciones de creación y actualización para evitar inconsistencias.
+- **Estructura del Código**:
+  - Uso consistente de estructuras `try-catch` para manejo de errores.
+  - Mensajes de error claros y detallados para facilitar la depuración.
+  - Uso de funciones asíncronas (`async/await`) para manejar las operaciones de E/S con la base de datos.
+
+---
+
+## Uso de las Funciones en la Aplicación
+
+Estas funciones pueden ser importadas y utilizadas en distintos componentes o rutas de la aplicación, facilitando la interacción con la base de datos de investigaciones. Por ejemplo:
+
+- **Enrutadores**: Para manejar las solicitudes HTTP correspondientes a cada operación CRUD.
+- **Componentes de React**: Para obtener y presentar datos en la interfaz de usuario.
+- **Servicios**: Como parte de una capa de servicios que abstrae las operaciones de datos.
+
+---
+
+# INTERFACES (Estructura de Modelos para las Firebase collections)
