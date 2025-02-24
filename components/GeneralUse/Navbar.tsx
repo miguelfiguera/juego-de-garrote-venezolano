@@ -83,17 +83,17 @@ function Navbar() {
                   </Link>
                 </li>
                 <li>
-                  <Link className="dropdown-item" href="/fundamentos/patio">
+                  <Link className="dropdown-item" href="/investigaciones">
                     Lista de Investigaciones
                   </Link>
                 </li>
                 <li>
-                  <Link className="dropdown-item" href="/fundamentos/patio">
+                  <Link className="dropdown-item" href="/publicaciones">
                     Publicaciones
                   </Link>
                 </li>
                 <li>
-                  <Link className="dropdown-item" href="/fundamentos/patio">
+                  <Link className="dropdown-item" href="/blog">
                     Blog
                   </Link>
                 </li>
@@ -140,7 +140,7 @@ function Navbar() {
                   )}
                   {hasValue && (
                     <li>
-                      <Link className="dropdown-item" href="/admin">
+                      <Link className="dropdown-item" href="/">
                         <LogOutButton />
                       </Link>
                     </li>

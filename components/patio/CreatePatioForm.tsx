@@ -81,7 +81,7 @@ const CreatePatioForm: React.FC<CreatePatioFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    let data: Omit<Patio, "id" | "createdAt" | "updatedAt"> = {
+    const data: Omit<Patio, "id" | "createdAt" | "updatedAt"> = {
       masterId: masterId,
       masterName: masterName,
       photoUrl: state.photoUrl,
@@ -103,7 +103,8 @@ const CreatePatioForm: React.FC<CreatePatioFormProps> = ({
       toast.success("¡Patio creado exitosamente!");
       dispatch({ type: "RESET" });
       router.push("/profile");
-    } catch (error) {
+    } catch (error: unknown) {
+      console.error("Error creating patio:", error);
       dispatch({ type: "SET_ERROR", payload: "Error creating patio" });
       dispatch({ type: "SET_LOADING", payload: false });
     }
