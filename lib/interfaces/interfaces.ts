@@ -108,7 +108,7 @@ export interface Publication {
 
 export interface Investigation {
   id: string; // Firestore document ID
-  adminId: string; // Reference to Admin (Firestore document ID)
+  investigatorId: string; // Reference to Admin (Firestore document ID)
   title: string;
   review: string;
   originalUrl?: string;

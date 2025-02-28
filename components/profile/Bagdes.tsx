@@ -10,7 +10,7 @@ const Badges = async () => {
   const customClaims = await getUserCustomClaims(userId);
   if (!customClaims) return null;
   return (
-    <div className="container mt-4 border-top py-3">
+    <div className="container my-4 border-top border-bottom py-3">
       <h2>Permisos del Usuario</h2>
       <ul>
         {Object.entries(customClaims).map(([key, value]) =>
