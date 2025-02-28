@@ -67,7 +67,7 @@ const AdminSidebar: React.FC = () => {
                 </a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="/admin/usuarios">
+                <a className="nav-link" href="/admin/profiles">
                   <i className="fa-solid fa-users mx-2 my-1"></i>
                   Usuarios
                 </a>

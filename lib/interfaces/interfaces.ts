@@ -58,6 +58,8 @@ export interface Patio {
   name: string;
   address: string;
   zipCode: string;
+  state: string;
+  country: string;
   contactPhone: string;
   contactEmail: string;
   createdAt: Timestamp | number;

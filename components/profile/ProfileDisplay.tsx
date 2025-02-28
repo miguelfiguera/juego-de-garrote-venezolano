@@ -4,6 +4,7 @@ import { destroy } from "@/lib/firebase/collections/profiles";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Profile } from "@/lib/interfaces/interfaces";
+import useSessionStore from "@/lib/zustand/userDataState";
 
 interface ProfileInfoProps {
   profile: Profile | null;
@@ -11,7 +12,11 @@ interface ProfileInfoProps {
 
 const ProfileDisplay: React.FC<ProfileInfoProps> = ({ profile }) => {
   const router = useRouter();
+  let { userUid } = useSessionStore();
 
+  if (userUid !== profile?.id) {
+    userUid = "";
+  }
   if (!profile) {
     return <p>Cargando...</p>;
   }
@@ -131,7 +136,7 @@ const ProfileDisplay: React.FC<ProfileInfoProps> = ({ profile }) => {
           )}
 
           {/* National ID */}
-          {profile.nationalIdNumber && (
+          {profile.nationalIdNumber && profile.userId === userUid && (
             <p>
               <strong>Número de Indentificación Nacional:</strong>{" "}
               {profile.nationalIdNumber}

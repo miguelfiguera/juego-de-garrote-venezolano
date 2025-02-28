@@ -46,6 +46,12 @@ const PatioCard: React.FC<PatioCardProps> = ({ patio }) => {
           <strong>Dirección:</strong> {patio.address}
         </p>
         <p className="card-text">
+          <strong>Estado:</strong> {patio.state}
+        </p>
+        <p className="card-text">
+          <strong>Pais:</strong> {patio.country}
+        </p>
+        <p className="card-text">
           <strong>Código Postal:</strong> {patio.zipCode}
         </p>
         <p className="card-text">

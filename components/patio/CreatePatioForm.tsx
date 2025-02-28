@@ -23,6 +23,8 @@ interface State {
   contactEmail: string;
   loading: boolean;
   error: string | null;
+  country: string;
+  state: string;
 }
 
 type Action =
@@ -34,6 +36,8 @@ type Action =
   | { type: "SET_CONTACT_EMAIL"; payload: string }
   | { type: "SET_LOADING"; payload: boolean }
   | { type: "SET_ERROR"; payload: string | null }
+  | { type: "SET_COUNTRY"; payload: string }
+  | { type: "SET_STATE"; payload: string }
   | { type: "RESET" };
 
 const initialState: State = {
@@ -45,6 +49,8 @@ const initialState: State = {
   contactEmail: "",
   loading: false,
   error: null,
+  country: "",
+  state: "",
 };
 
 const reducer = (state: State, action: Action): State => {
@@ -65,6 +71,10 @@ const reducer = (state: State, action: Action): State => {
       return { ...state, loading: action.payload };
     case "SET_ERROR":
       return { ...state, error: action.payload };
+    case "SET_COUNTRY":
+      return { ...state, country: action.payload };
+    case "SET_STATE":
+      return { ...state, state: action.payload };
     case "RESET":
       return initialState;
     default:
@@ -81,6 +91,10 @@ const CreatePatioForm: React.FC<CreatePatioFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    dispatch({ type: "SET_LOADING", payload: true });
+    dispatch({ type: "SET_ERROR", payload: null });
+
     const data: Omit<Patio, "id" | "createdAt" | "updatedAt"> = {
       masterId: masterId,
       masterName: masterName,
@@ -90,6 +104,8 @@ const CreatePatioForm: React.FC<CreatePatioFormProps> = ({
       zipCode: state.zipCode,
       contactPhone: state.contactPhone,
       contactEmail: state.contactEmail,
+      country: state.country,
+      state: state.state,
     };
 
     try {
@@ -98,21 +114,24 @@ const CreatePatioForm: React.FC<CreatePatioFormProps> = ({
       if (!result) {
         dispatch({ type: "SET_ERROR", payload: "Error creating patio" });
         dispatch({ type: "SET_LOADING", payload: false });
+        toast.error("Error creating patio"); // Added error toast
         return;
       }
       toast.success("¡Patio creado exitosamente!");
       dispatch({ type: "RESET" });
       router.push("/profile");
-    } catch (error: unknown) {
+    } catch (error: any) {
       console.error("Error creating patio:", error);
       dispatch({ type: "SET_ERROR", payload: "Error creating patio" });
       dispatch({ type: "SET_LOADING", payload: false });
+      toast.error(error.message || "Error creating patio"); // Added error toast
+    } finally {
+      dispatch({ type: "SET_LOADING", payload: false }); // Ensure loading is always set to false
     }
   };
 
   return (
     <div className="container my-4">
-      <h2>Crear Patio</h2>
       {state.error && <div className="alert alert-danger">{state.error}</div>}
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
@@ -169,6 +188,34 @@ const CreatePatioForm: React.FC<CreatePatioFormProps> = ({
             value={state.address}
             onChange={(e) =>
               dispatch({ type: "SET_ADDRESS", payload: e.target.value })
+            }
+          />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="state" className="form-label">
+            Estado:
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="state"
+            value={state.state} // The value was missing here, so I added
+            onChange={(e) =>
+              dispatch({ type: "SET_STATE", payload: e.target.value })
+            }
+          />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="country" className="form-label">
+            Pais:
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="country"
+            value={state.country} // The value was missing here, so I added
+            onChange={(e) =>
+              dispatch({ type: "SET_COUNTRY", payload: e.target.value })
             }
           />
         </div>

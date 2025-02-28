@@ -1,29 +1,28 @@
 import React from "react";
 import Image from "next/image";
-
-export interface Profile {
-  id: string;
-  name?: string;
-  lastname?: string;
-  address?: string;
-  age?: number;
-  status?: string;
-  role?: string;
-  yearsInTheGame?: number;
-  biography?: string;
-  zipcode?: string;
-  phone?: string;
-  email?: string;
-  style?: string;
-  photoUrl?: string;
-  country?: string;
-}
+import {
+  getUserCustomClaims,
+  getUserIdFromCookie,
+} from "@/lib/firebase/admin/auth";
+import Link from "next/link";
+import { Profile } from "@/lib/interfaces/interfaces";
 
 interface ProfileCardProps {
   profile: Profile;
 }
 
-const ProfileCard: React.FC<ProfileCardProps> = ({ profile }) => {
+const ProfileCard: React.FC<ProfileCardProps> = async ({ profile }) => {
+  let customClaims = null;
+  const userUid = await getUserIdFromCookie();
+
+  if (userUid) {
+    customClaims = await getUserCustomClaims(userUid);
+  }
+
+  const route = customClaims?.admin
+    ? `/admin/profile/${profile.userId}`
+    : `/profile/${profile.userId}`;
+
   return (
     <div
       className="card h-100 d-flex flex-row mb-3 rounded-3 mx-auto"
@@ -47,9 +46,12 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile }) => {
         </div>
       )}
       <div className="card-body">
-        <h5 className="card-title fw-bold border-bottom my-2">
-          {profile.name} {profile.lastname}
-        </h5>
+        <Link href={route}>
+          {" "}
+          <h5 className="card-title fw-bold border-bottom my-2">
+            {profile.name} {profile.lastname}
+          </h5>
+        </Link>
         {profile.country && (
           <p className="card-text">
             <strong>País:</strong> {profile.country}
