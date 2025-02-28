@@ -90,7 +90,10 @@ export async function create(
 // Update to update an existing Investigation
 export async function update(
   id: string,
-  investigationData: Omit<Investigation, "id" | "createdAt" | "updatedAt">
+  investigationData: Omit<
+    Investigation,
+    "createdAt" | "updatedAt" | "investigatorId" | "investigatorName"
+  >
 ): Promise<void> {
   try {
     const now = Date.now(); // Use milliseconds for timestamp

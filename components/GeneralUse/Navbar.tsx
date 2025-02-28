@@ -92,12 +92,12 @@ function Navbar() {
                     Publicaciones
                   </Link>
                 </li>
-                <li>
+                {/* <li>
                   <Link className="dropdown-item" href="/blog">
                     Blog
                   </Link>
                 </li>
-                {/*                 <li>
+                                 <li>
                   <Link className="dropdown-item" href="/fundamentos/tejido">
                     Tejido del garrote
                   </Link>

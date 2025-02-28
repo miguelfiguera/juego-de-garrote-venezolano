@@ -100,6 +100,7 @@ export interface Publication {
   adminId: string; // Reference to Admin (Firestore document ID)
   title: string;
   review: string;
+  authorName?: string;
   originalUrl?: string;
   file?: string; // Assuming you store the file URL in Firebase Storage
   createdAt: Timestamp | number;
@@ -109,11 +110,18 @@ export interface Publication {
 export interface Investigation {
   id: string; // Firestore document ID
   investigatorId: string; // Reference to Admin (Firestore document ID)
+  investigatorName: string;
   title: string;
   review: string;
   originalUrl?: string;
   file?: string; // Assuming you store the file URL in Firebase Storage
-  status: "pending" | "payed" | "canceled" | "error" | "funding";
+  status:
+    | "pending"
+    | "payed"
+    | "canceled"
+    | "publication"
+    | "funding"
+    | "complete";
   createdAt: Timestamp | number;
   updatedAt: Timestamp | number;
 }

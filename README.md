@@ -20,6 +20,20 @@ Los datos se almacenan y gestionan mediante **Firebase Store & Storage**, permit
 
 ---
 
+## Para correr en modo desarrollo:
+
+Para este proyecto hay una base de datos para desarrollo, las .env las puedes encontrar en el archivo .sample.env, esas pertenecen a las variables de desarrollo del firebase SDK y el archivo notSoSecret.json contiene las referentes al admin SDK de firebase. De esa forma puede ser corrido en local con estos ligeros ajustes:
+
+1.
+2.
+3.
+4.
+5.
+6.
+7.
+
+---
+
 ## Documentacion de las librerias:
 
 - **Framework de Frontend:** [Next.js 14.2](https://nextjs.org/blog/next-14-2)
