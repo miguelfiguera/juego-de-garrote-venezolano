@@ -11,24 +11,20 @@ import { useRouter } from "next/navigation";
 // Using Font Awesome via CDN, so no direct import here
 
 interface State {
-  claims: Pick<Claims, "blogger" | "seller" | "investigator" | "jugador">;
+  claims: Pick<Claims, "seller" | "investigator" | "jugador">;
   loading: boolean;
 }
 
 type Action =
   | {
       type: "TOGGLE_CLAIM";
-      payload: keyof Pick<
-        Claims,
-        "blogger" | "seller" | "investigator" | "jugador"
-      >;
+      payload: keyof Pick<Claims, "seller" | "investigator" | "jugador">;
     }
   | { type: "SET_LOADING"; payload: boolean }
   | { type: "RESET_CLAIMS" };
 
 const initialState: State = {
   claims: {
-    blogger: false,
     seller: false,
     investigator: false,
     jugador: false,
@@ -52,7 +48,6 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         claims: {
-          blogger: false,
           seller: false,
           investigator: false,
           jugador: false,
@@ -134,17 +129,7 @@ const Page: React.FC = () => {
       style={{ maxWidth: "500px" }}
     >
       <h3 className="border-bottom">Editar Permisos</h3>
-      <div className="mb-3">
-        <label className="form-check-label">
-          Blogger:
-          <input
-            type="checkbox"
-            className="form-check-input ms-2"
-            checked={state.claims.blogger}
-            onChange={() => handleChange("blogger")}
-          />
-        </label>
-      </div>
+
       <div className="mb-3">
         <label className="form-check-label">
           Seller:
