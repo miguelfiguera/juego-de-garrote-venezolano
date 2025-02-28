@@ -99,7 +99,8 @@ const Page = () => {
 
     try {
       // Check if the email already exists
-      const userExists = await searchUserByEmail(state.email);
+      /*       const userExists = await searchUserByEmail(state.email);
+
       if (userExists) {
         dispatch({
           type: "SET_ERROR",
@@ -107,7 +108,7 @@ const Page = () => {
         });
         dispatch({ type: "SET_LOADING", payload: false });
         return;
-      }
+      } */
       // creates user saving credentials on firebase
       /* const newUser = */
       await createUser(state.email, state.password, state.name, state.lastName);

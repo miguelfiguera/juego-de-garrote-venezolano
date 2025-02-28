@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Profile } from "@/lib/interfaces/interfaces";
 import useSessionStore from "@/lib/zustand/userDataState";
+import useCustomClaimStore from "@/lib/zustand/customClaimStore";
 
 interface ProfileInfoProps {
   profile: Profile | null;
@@ -13,10 +14,8 @@ interface ProfileInfoProps {
 const ProfileDisplay: React.FC<ProfileInfoProps> = ({ profile }) => {
   const router = useRouter();
   let { userUid } = useSessionStore();
+  const { customClaims } = useCustomClaimStore();
 
-  if (userUid !== profile?.id) {
-    userUid = "";
-  }
   if (!profile) {
     return <p>Cargando...</p>;
   }
@@ -33,6 +32,11 @@ const ProfileDisplay: React.FC<ProfileInfoProps> = ({ profile }) => {
   const handleDeactivate = () => {
     router.push("/DeleteAccount");
   };
+
+  // Control to render buttons for the crud of the profile.
+  const isTrue = userUid === profile.userId;
+  const isAdmin = customClaims?.admin;
+  const anyOfThis = isAdmin ? isAdmin : isTrue;
 
   return (
     <div className="container mt-4">
@@ -157,17 +161,22 @@ const ProfileDisplay: React.FC<ProfileInfoProps> = ({ profile }) => {
             </p>
           )}
 
-          <div className="d-flex justify-content-center pb-2 border-top pt-4">
-            <button className="btn btn-primary mx-2" onClick={handleEdit}>
-              Editar
-            </button>
-            <button className="btn btn-warning  mx-2" onClick={handleDelete}>
-              Borrar Perfil
-            </button>
-            <button className="btn btn-danger  mx-2" onClick={handleDeactivate}>
-              Desactivar Cuenta
-            </button>
-          </div>
+          {anyOfThis && (
+            <div className="d-flex justify-content-center pb-2 border-top pt-4">
+              <button className="btn btn-primary mx-2" onClick={handleEdit}>
+                Editar
+              </button>
+              <button className="btn btn-warning  mx-2" onClick={handleDelete}>
+                Borrar Perfil
+              </button>
+              <button
+                className="btn btn-danger  mx-2"
+                onClick={handleDeactivate}
+              >
+                Desactivar Cuenta
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

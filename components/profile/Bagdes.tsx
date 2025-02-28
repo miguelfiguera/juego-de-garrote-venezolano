@@ -4,8 +4,9 @@ import {
   getUserIdFromCookie,
   getUserCustomClaims,
 } from "@/lib/firebase/admin/auth";
-const Badges = async () => {
-  const userId = await getUserIdFromCookie();
+const Badges = async ({ id }: any) => {
+  const userId = id ? id : await getUserIdFromCookie();
+  const thisUserId = await getUserIdFromCookie();
   if (!userId) return null;
   const customClaims = await getUserCustomClaims(userId);
   if (!customClaims) return null;
@@ -24,11 +25,13 @@ const Badges = async () => {
         )}
       </ul>
 
-      <div className="container">
-        <Link href={"/badges"}>
-          <button className="btn btn-primary">Editar Permisos</button>
-        </Link>
-      </div>
+      {userId == thisUserId && (
+        <div className="container">
+          <Link href={"/badges"}>
+            <button className="btn btn-primary">Editar Permisos</button>
+          </Link>
+        </div>
+      )}
     </div>
   );
 };
