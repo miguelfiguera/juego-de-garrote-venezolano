@@ -64,12 +64,7 @@ const Page: React.FC = () => {
   const { customClaims } = useCustomClaimStore();
   const router = useRouter();
   const handleChange = useCallback(
-    (
-      claimName: keyof Pick<
-        Claims,
-        "blogger" | "seller" | "investigator" | "jugador"
-      >
-    ) => {
+    (claimName: keyof Pick<Claims, "seller" | "investigator" | "jugador">) => {
       dispatch({ type: "TOGGLE_CLAIM", payload: claimName });
     },
     [dispatch]
