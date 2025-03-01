@@ -20,7 +20,7 @@ const ProfileCard: React.FC<ProfileCardProps> = async ({ profile }) => {
   }
 
   const route = customClaims?.admin
-    ? `/admin/profile/${profile.userId}`
+    ? `/admin/profiles/${profile.userId}`
     : `/profile/${profile.userId}`;
 
   return (
