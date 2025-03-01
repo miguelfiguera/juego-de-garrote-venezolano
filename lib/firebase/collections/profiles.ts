@@ -126,6 +126,33 @@ export async function update(
   }
 }
 
+// To update a profile promoting a user to master or instructor inside a patio.
+export async function updateProfileRole(
+  id: string,
+  profileData: Pick<Profile, "role">
+): Promise<void> {
+  try {
+    const now = Date.now(); // Use milliseconds for timestamp
+    await adminDb
+      .collection(PROFILES_COLLECTION)
+      .doc(id)
+      .update({
+        ...profileData,
+        updatedAt: now,
+      });
+    revalidatePath(`/profile`); // Revalidate the specific profile page
+    revalidatePath("/patios");
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(`Error updating profile with ID ${id}:`, error);
+      throw new Error(
+        error.message || `Failed to update profile with ID ${id}`
+      );
+    } else {
+      throw new Error("An unknown error occurred");
+    }
+  }
+}
 //destroy a profile
 
 export async function destroy(id: string): Promise<void> {

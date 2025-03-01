@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import LogOutButton from "./LogOutButton";
 import Link from "next/link"; // Import
 import useSessionStore from "@/lib/zustand/userDataState";
+import useProfileStore from "@/lib/zustand/ProfileStore";
 import useCustomClaimStore from "@/lib/zustand/customClaimStore";
 import { show } from "@/lib/firebase/collections/profiles";
 import {
@@ -15,6 +16,7 @@ function Navbar() {
   const { session, patioId, setSession, setUserUid, setProfileId, setPatioId } =
     useSessionStore();
   const { customClaims, setCustomClaims } = useCustomClaimStore();
+  const { setProfile } = useProfileStore();
 
   //in zustand, a refresh may erase the state, so this is a fix from clientside
   // we are using navbar as navbar is always visible.
@@ -33,6 +35,7 @@ function Navbar() {
       const profile = await show(result1);
       if (profile) {
         setProfileId(profile.id);
+        setProfile(profile);
       }
       if (profile?.patioId) {
         setPatioId(profile.patioId);

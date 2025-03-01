@@ -2,7 +2,7 @@ import React from "react";
 import PatioCard from "@/components/patio/PatioCard";
 import { show } from "@/lib/firebase/collections/patios";
 import { getProfilesByPatioId } from "@/lib/firebase/collections/profiles";
-import ProfileCard from "@/components/profile/ProfileCard";
+import PatioProfileCard from "@/components/patio/PatioProfileCard";
 import Solicitudes from "@/components/patio/Solicitudes";
 import { getUserIdFromCookie } from "@/lib/firebase/admin/auth";
 
@@ -14,15 +14,33 @@ async function Page({ params }: { params: { id: string } }) {
 
   const aprendicesCards = jugadores
     .filter((jugador) => jugador.role == "aprendiz")
-    .map((jugador) => <ProfileCard key={jugador.id} profile={jugador} />);
+    .map((jugador) => (
+      <PatioProfileCard
+        key={jugador.id}
+        profile={jugador}
+        patioId={params.id}
+      />
+    ));
 
   const instructoresCards = jugadores
     .filter((jugador) => jugador.role == "instructor")
-    .map((jugador) => <ProfileCard key={jugador.id} profile={jugador} />);
+    .map((jugador) => (
+      <PatioProfileCard
+        key={jugador.id}
+        profile={jugador}
+        patioId={params.id}
+      />
+    ));
 
   const maestrosCards = jugadores
     .filter((jugador) => jugador.role == "maestro")
-    .map((jugador) => <ProfileCard key={jugador.id} profile={jugador} />);
+    .map((jugador) => (
+      <PatioProfileCard
+        key={jugador.id}
+        profile={jugador}
+        patioId={params.id}
+      />
+    ));
 
   const newCommers = jugadores
     .filter((jugador) => jugador.patioStatus == "pending")
@@ -54,7 +72,7 @@ async function Page({ params }: { params: { id: string } }) {
       {maestrosCards.length > 0 && (
         <div className="container">
           <h2 className="text-center fw-bold mt-5 mb-3 pt-5 pb-3 border-bottom">
-            Maestros del Patio
+            Maestros
           </h2>
           <div className="row">{maestrosCards}</div>
         </div>
@@ -62,7 +80,7 @@ async function Page({ params }: { params: { id: string } }) {
       {instructoresCards.length > 0 && (
         <div className="container">
           <h2 className="text-center fw-bold mt-5 mb-3 pt-5 pb-3 border-bottom">
-            Instructores del Patio
+            Instructores
           </h2>
           <div className="row">{instructoresCards}</div>
         </div>
@@ -71,7 +89,7 @@ async function Page({ params }: { params: { id: string } }) {
       {aprendicesCards.length > 0 && (
         <div className="container">
           <h2 className="text-center fw-bold mt-5 mb-3 pt-5 pb-3 border-bottom">
-            Aprendices del Patio
+            Aprendices
           </h2>
           <div className="row">{aprendicesCards}</div>
         </div>
@@ -79,7 +97,7 @@ async function Page({ params }: { params: { id: string } }) {
       {newCommers.length > 0 && userUid == patio.masterId && (
         <div className="container">
           <h2 className="text-center fw-bold mt-5 mb-3 pt-5 pb-3 border-bottom">
-            Solicitudes del Patio
+            Solicitudes
           </h2>
           <div className="row">{newCommers}</div>
         </div>
