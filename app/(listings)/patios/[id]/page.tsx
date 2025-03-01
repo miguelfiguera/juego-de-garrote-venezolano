@@ -1,0 +1,72 @@
+import React from "react";
+import PatioCard from "@/components/patio/PatioCard";
+import { show } from "@/lib/firebase/collections/patios";
+import { getProfilesByPatioId } from "@/lib/firebase/collections/profiles";
+import ProfileCard from "@/components/profile/ProfileCard";
+
+async function Page({ params }: { params: { id: string } }) {
+  const patio = await show(params.id);
+  const jugadores = await getProfilesByPatioId(params.id);
+  const aprendicesCards = jugadores
+    .filter((jugador) => jugador.role == "aprendiz")
+    .map((jugador) => <ProfileCard key={jugador.id} profile={jugador} />);
+  const instructoresCards = jugadores
+    .filter((jugador) => jugador.role == "instructor")
+    .map((jugador) => <ProfileCard key={jugador.id} profile={jugador} />);
+  const maestrosCards = jugadores
+    .filter((jugador) => jugador.role == "maestro")
+    .map((jugador) => <ProfileCard key={jugador.id} profile={jugador} />);
+
+  if (!patio) {
+    return (
+      <div className="container my-4">
+        <h1 className="text-center fw-bold mt-5 mb-3 pt-5 pb-3">Patios</h1>
+        <div className="">
+          {" "}
+          <h1 className="text-center my-5">
+            No hay patios registrados por ahora.
+          </h1>
+        </div>{" "}
+      </div>
+    );
+  }
+
+  return (
+    <div className="container">
+      <h1 className="text-center fw-bold mt-5 mb-3 pt-5 pb-3 border-bottom">
+        Patio
+      </h1>
+      <div className="row">{<PatioCard patio={patio} />}</div>
+      <h1 className="text-center fw-bold mt-5 mb-3 pt-5 pb-3 border-bottom">
+        Practicantes del Patio
+      </h1>
+      {instructoresCards.length > 0 && (
+        <div className="container">
+          <h2 className="text-center fw-bold mt-5 mb-3 pt-5 pb-3 border-bottom">
+            Maestros del Patio
+          </h2>
+          <div className="row">{maestrosCards}</div>
+        </div>
+      )}
+      {instructoresCards.length > 0 && (
+        <div className="container">
+          <h2 className="text-center fw-bold mt-5 mb-3 pt-5 pb-3 border-bottom">
+            Instructores del Patio
+          </h2>
+          <div className="row">{instructoresCards}</div>
+        </div>
+      )}
+
+      {aprendicesCards.length > 0 && (
+        <div className="container">
+          <h2 className="text-center fw-bold mt-5 mb-3 pt-5 pb-3 border-bottom">
+            Aprendices del Patio
+          </h2>
+          <div className="row">{aprendicesCards}</div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default Page;

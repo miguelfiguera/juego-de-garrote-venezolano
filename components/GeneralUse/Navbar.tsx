@@ -5,13 +5,15 @@ import LogOutButton from "./LogOutButton";
 import Link from "next/link"; // Import
 import useSessionStore from "@/lib/zustand/userDataState";
 import useCustomClaimStore from "@/lib/zustand/customClaimStore";
+import { show } from "@/lib/firebase/collections/profiles";
 import {
   getUserCustomClaims,
   getUserIdFromCookie,
 } from "@/lib/firebase/admin/auth";
 
 function Navbar() {
-  const { session, setSession, setUserUid } = useSessionStore();
+  const { session, patioId, setSession, setUserUid, setProfileId, setPatioId } =
+    useSessionStore();
   const { customClaims, setCustomClaims } = useCustomClaimStore();
 
   //in zustand, a refresh may erase the state, so this is a fix from clientside
@@ -22,10 +24,18 @@ function Navbar() {
       if (!result1) return;
       setUserUid(result1);
       setSession(true);
-
       const result2 = await getUserCustomClaims(result1);
       if (result2) {
         setCustomClaims(result2);
+      }
+
+      // patio
+      const profile = await show(result1);
+      if (profile) {
+        setProfileId(profile.id);
+      }
+      if (profile?.patioId) {
+        setPatioId(profile.patioId);
       }
     }
 
@@ -122,7 +132,7 @@ function Navbar() {
                   </Link>
                 </li> */}
                   <li>
-                    <Link className="dropdown-item" href="/patios">
+                    <Link className="dropdown-item" href={`/patios/${patioId}`}>
                       Mi Patio
                     </Link>
                   </li>

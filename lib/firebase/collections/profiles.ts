@@ -26,6 +26,27 @@ export async function index(): Promise<Profile[]> {
   }
 }
 
+export async function getProfilesByPatioId(
+  patioId: string
+): Promise<Profile[]> {
+  try {
+    const snapshot = await adminDb
+      .collection(PROFILES_COLLECTION)
+      .where("patioId", "==", patioId)
+      .get();
+    const profiles: Profile[] = snapshot.docs.map(
+      (doc) => ({ id: doc.id, ...doc.data() } as Profile)
+    );
+    return profiles;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error(error.message || "Failed to fetch profiles");
+    } else {
+      throw new Error("An unknown error occurred");
+    }
+  }
+}
+
 //Show to get specific a specific profile
 
 export async function show(userId: string): Promise<Profile | null> {

@@ -7,6 +7,7 @@ import useSessionStore from "@/lib/zustand/userDataState";
 import useCustomClaimStore from "@/lib/zustand/customClaimStore";
 import { useRouter } from "next/navigation";
 import { destroy as destroyPatio } from "@/lib/firebase/collections/patios";
+import Link from "next/link";
 interface PatioCardProps {
   patio: Patio;
 }
@@ -15,6 +16,9 @@ const PatioCard: React.FC<PatioCardProps> = ({ patio }) => {
   const { userUid } = useSessionStore();
   const { customClaims } = useCustomClaimStore();
   const router = useRouter();
+  const routing = customClaims?.admin
+    ? `/admin/patios/edit/${patio.id}`
+    : `/patios/edit/`;
   const handleDestroy = async () => {
     await destroyPatio(patio.id);
   };
@@ -38,7 +42,9 @@ const PatioCard: React.FC<PatioCardProps> = ({ patio }) => {
         </div>
       )}
       <div className="card-body">
-        <h5 className="card-title fw-bold">{patio.name}</h5>
+        <Link href={`patios/${patio.id}`}>
+          <h5 className="card-title fw-bold">{patio.name}</h5>
+        </Link>
         <p className="card-text">
           <strong>Maestro:</strong> {patio.masterName}
         </p>
@@ -65,7 +71,7 @@ const PatioCard: React.FC<PatioCardProps> = ({ patio }) => {
           <div className="container my-2">
             <button
               className="btn btn-primary mx-2"
-              onClick={() => router.push(`/patios/edit`)}
+              onClick={() => router.push(routing)}
             >
               Editar
             </button>
