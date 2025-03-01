@@ -11,11 +11,10 @@ import { revalidatePath } from "next/cache";
 
 //search user by email to check if it exists
 export const searchUserByEmail = async (email: string) => {
-  //check if user exists
   const user = await adminAuth.getUserByEmail(email);
   if (user) {
     console.log("User already exists:", email);
-    return true;
+    return user.uid;
   }
   return false;
 };
@@ -77,6 +76,19 @@ export const modifyCustomClaims = async (uid: string, claims: Claims) => {
   }
 };
 
+export const modifyCustomClaimsAdmin = async (
+  uid: string,
+  claims: Pick<Claims, "admin" | "master" | "blogger">
+) => {
+  try {
+    await adminAuth.setCustomUserClaims(uid, claims);
+    revalidatePath("/profile");
+    return true;
+  } catch (error) {
+    console.error("Error modifying custom claims:", error);
+    return false;
+  }
+};
 //get all users
 
 export const getAllUsers = async () => {

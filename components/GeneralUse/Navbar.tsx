@@ -146,7 +146,7 @@ function Navbar() {
                   </li>
                   {customClaims?.admin == true && (
                     <li>
-                      <Link className="dropdown-item" href="/admin/blog">
+                      <Link className="dropdown-item" href="/admin">
                         Admin
                       </Link>
                     </li>

@@ -72,11 +72,11 @@ const AdminSidebar: React.FC = () => {
                   Usuarios
                 </a>
               </li>
-              <li className="nav-item">
+              {/*               <li className="nav-item">
                 <a className="nav-link" href="/admin/blog">
                   <i className="fa-solid fa-pencil mx-2 my-1"></i> Blog
                 </a>
-              </li>
+              </li> */}
               <li className="nav-item">
                 <LogOutButton />
               </li>
