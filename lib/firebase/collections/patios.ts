@@ -84,7 +84,7 @@ export async function create(
       .doc(profileId)
       .update({
         patioId: docRef.id,
-        patioStatus: "accepted",
+        patioStatus: "approved",
       });
 
     if (!profileUpdate) {
@@ -219,5 +219,51 @@ export async function leavePatio(userId: string): Promise<void> {
       console.error(`Error joining leaving patio:`, error);
       throw new Error("An unknown error occurred");
     }
+  }
+}
+
+export async function accepted(userUid: string): Promise<void> {
+  try {
+    const profile = await adminDb
+      .collection(PROFILES_COLLECTION)
+      .where("userId", "==", userUid)
+      .limit(1)
+      .get();
+    if (profile.empty) {
+      throw new Error("Profile not found for user");
+    }
+    const patioId = profile.docs[0].data().patioId;
+    const id = profile.docs[0].id;
+    await adminDb.collection(PROFILES_COLLECTION).doc(id).update({
+      patioStatus: "approved",
+    });
+    revalidatePath(`/admin/patios/${patioId}`); // Revalidate the specific profile page
+    revalidatePath(`/patios/${patioId}`); // Revalidate the profiles list (if it displays updated info)
+  } catch {
+    throw new Error("An unknown error occurred");
+  }
+}
+
+export async function rejected(userUid: string): Promise<void> {
+  try {
+    const profile = await adminDb
+      .collection(PROFILES_COLLECTION)
+      .where("userId", "==", userUid)
+      .limit(1)
+      .get();
+    if (profile.empty) {
+      throw new Error("Profile not found for user");
+    }
+    const patioId = profile.docs[0].data().patioId;
+    const id = profile.docs[0].id;
+    await adminDb.collection(PROFILES_COLLECTION).doc(id).update({
+      patioStatus: "rejected",
+      patioId: null,
+      masterId: null,
+    });
+    revalidatePath(`/admin/patios/${patioId}`); // Revalidate the specific profile page
+    revalidatePath(`/patios/${patioId}`); // Revalidate the profiles list (if it displays updated info)
+  } catch {
+    throw new Error("An unknown error occurred");
   }
 }

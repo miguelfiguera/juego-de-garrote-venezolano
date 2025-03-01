@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useReducer, useEffect } from "react";
+import React, { useReducer } from "react";
 import { useRouter } from "next/navigation";
 import { Patio } from "@/lib/interfaces/interfaces";
 import { update } from "@/lib/firebase/collections/patios";
 import { toast } from "react-toastify";
+import useCustomClaimStore from "@/lib/zustand/customClaimStore";
 
 //import { Timestamp } from "firebase-admin/firestore";
 
@@ -22,6 +23,8 @@ interface State {
   contactEmail: string;
   loading: boolean;
   error: string | null;
+  state: string;
+  country: string;
 }
 
 type Action =
@@ -34,6 +37,8 @@ type Action =
   | { type: "SET_CONTACT_EMAIL"; payload: string }
   | { type: "SET_LOADING"; payload: boolean }
   | { type: "SET_ERROR"; payload: string | null }
+  | { type: "SET_COUNTRY"; payload: string }
+  | { type: "SET_STATE"; payload: string }
   | { type: "RESET" };
 
 const initialState: State = {
@@ -46,6 +51,8 @@ const initialState: State = {
   contactEmail: "",
   loading: false,
   error: null,
+  state: "",
+  country: "",
 };
 
 const reducer = (state: State, action: Action): State => {
@@ -68,6 +75,10 @@ const reducer = (state: State, action: Action): State => {
       return { ...state, loading: action.payload };
     case "SET_ERROR":
       return { ...state, error: action.payload };
+    case "SET_COUNTRY":
+      return { ...state, country: action.payload };
+    case "SET_STATE":
+      return { ...state, state: action.payload };
     case "RESET":
       return initialState;
     default:
@@ -76,19 +87,26 @@ const reducer = (state: State, action: Action): State => {
 };
 
 const EditPatioForm: React.FC<EditPatioFormProps> = ({ patio }) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, {
+    masterName: patio.masterName,
+    photoUrl: patio.photoUrl,
+    name: patio.name,
+    address: patio.address,
+    zipCode: patio.zipCode,
+    contactPhone: patio.contactPhone,
+    contactEmail: patio.contactEmail,
+    loading: false,
+    error: null,
+    state: patio.state,
+    country: patio.country,
+  });
   const router = useRouter();
+  const { customClaims } = useCustomClaimStore();
+  const routing = customClaims?.admin
+    ? `/admin/patios/${patio.id}`
+    : `/profiles`;
 
-  useEffect(() => {
-    // Initialize the state with the patio data from the props
-    dispatch({ type: "SET_MASTER_NAME", payload: patio.masterName });
-    dispatch({ type: "SET_PHOTO_URL", payload: patio.photoUrl });
-    dispatch({ type: "SET_NAME", payload: patio.name });
-    dispatch({ type: "SET_ADDRESS", payload: patio.address });
-    dispatch({ type: "SET_ZIP_CODE", payload: patio.zipCode });
-    dispatch({ type: "SET_CONTACT_PHONE", payload: patio.contactPhone });
-    dispatch({ type: "SET_CONTACT_EMAIL", payload: patio.contactEmail });
-  }, [patio]); // Dependency array ensures this runs when the patio prop changes
+  // No need for useEffect anymore. Using a new instance of the state.
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -98,6 +116,8 @@ const EditPatioForm: React.FC<EditPatioFormProps> = ({ patio }) => {
       masterId: patio.masterId,
       masterName: state.masterName,
       photoUrl: state.photoUrl,
+      state: state.state, // Changed patio.state to state.state
+      country: state.country, // Changed patio.country to state.country
       name: state.name,
       address: state.address,
       zipCode: state.zipCode,
@@ -109,16 +129,14 @@ const EditPatioForm: React.FC<EditPatioFormProps> = ({ patio }) => {
       await update(patio.id, updatedPatioData);
       toast.success("¡Patio actualizado exitosamente!");
       dispatch({ type: "RESET" });
-      router.push("/profile");
-    } catch {
+      router.push(routing);
+    } catch (error: any) {
       dispatch({ type: "SET_ERROR", payload: "Error updating patio" });
-      dispatch({ type: "SET_LOADING", payload: false });
-      return;
     }
   };
 
   const handleCancel = () => {
-    router.push("/profile");
+    router.push(routing);
   };
 
   return (
@@ -182,6 +200,34 @@ const EditPatioForm: React.FC<EditPatioFormProps> = ({ patio }) => {
             value={state.address}
             onChange={(e) =>
               dispatch({ type: "SET_ADDRESS", payload: e.target.value })
+            }
+          />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="state" className="form-label">
+            Estado:
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="state"
+            value={state.state} // The value was missing here, so I added
+            onChange={(e) =>
+              dispatch({ type: "SET_STATE", payload: e.target.value })
+            }
+          />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="country" className="form-label">
+            Pais:
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="country"
+            value={state.country} // The value was missing here, so I added
+            onChange={(e) =>
+              dispatch({ type: "SET_COUNTRY", payload: e.target.value })
             }
           />
         </div>
