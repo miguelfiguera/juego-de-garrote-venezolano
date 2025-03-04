@@ -4,7 +4,7 @@ import {
   getUserIdFromCookie,
   getUserCustomClaims,
 } from "@/lib/firebase/admin/auth";
-const Badges = async ({ id }: any) => {
+const Badges = async ({ id }: { id?: string }) => {
   const userId = id ? id : await getUserIdFromCookie();
   const thisUserId = await getUserIdFromCookie();
   if (!userId) return null;

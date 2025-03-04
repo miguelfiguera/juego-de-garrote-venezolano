@@ -120,11 +120,16 @@ const CreatePatioForm: React.FC<CreatePatioFormProps> = ({
       toast.success("¡Patio creado exitosamente!");
       dispatch({ type: "RESET" });
       router.push("/profile");
-    } catch (error: any) {
-      console.error("Error creating patio:", error);
-      dispatch({ type: "SET_ERROR", payload: "Error creating patio" });
-      dispatch({ type: "SET_LOADING", payload: false });
-      toast.error(error.message || "Error creating patio"); // Added error toast
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Error creating patio:", error);
+        dispatch({ type: "SET_ERROR", payload: "Error creating patio" });
+        dispatch({ type: "SET_LOADING", payload: false });
+        toast.error(error.message || "Error creating patio");
+      } // Added error toast
+      else {
+        console.error("Unknown error:", error);
+      }
     } finally {
       dispatch({ type: "SET_LOADING", payload: false }); // Ensure loading is always set to false
     }

@@ -1,6 +1,6 @@
 // Page.tsx
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { searchUserByEmail } from "@/lib/firebase/admin/auth";
 import { show } from "@/lib/firebase/collections/profiles";
 import { Profile } from "@/lib/interfaces/interfaces";

@@ -17,7 +17,7 @@ interface FormState {
 }
 
 type FormAction =
-  | { type: "UPDATE_FIELD"; payload: { field: keyof FormState; value: any } }
+  | { type: "UPDATE_FIELD"; payload: { field: keyof FormState; value: string } }
   | { type: "SET_LOADING"; payload: boolean }
   | { type: "SET_ERROR"; payload: string | null }
   | { type: "RESET_FORM" };
@@ -58,7 +58,7 @@ const CreatePublicationForm: React.FC<CreatePublicationFormProps> = ({
   const router = useRouter();
 
   const handleChange = useCallback(
-    (field: keyof FormState, value: any) => {
+    (field: keyof FormState, value: string) => {
       dispatch({ type: "UPDATE_FIELD", payload: { field, value } });
     },
     [dispatch]
@@ -85,16 +85,25 @@ const CreatePublicationForm: React.FC<CreatePublicationFormProps> = ({
         file: state.file,
       });
 
+      if (!newPublicationId) {
+        toast.error("Error al crear la publicación");
+        return;
+      }
+
       toast.success("¡Publicación creada con éxito!");
       dispatch({ type: "RESET_FORM" }); // Clear the form
       router.push(`/admin/publicaciones/`);
-    } catch (error: any) {
-      console.error("Error al crear la publicación", error);
-      dispatch({
-        type: "SET_ERROR",
-        payload: error.message || "Error al crear la publicación",
-      });
-      toast.error(error.message || "Error al crear la publicación");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Error al crear la publicación", error);
+        dispatch({
+          type: "SET_ERROR",
+          payload: error.message || "Error al crear la publicación",
+        });
+        toast.error(error.message || "Error al crear la publicación");
+      } else {
+        console.error("Error al crear la publicación", error);
+      }
     } finally {
       dispatch({ type: "SET_LOADING", payload: false });
     }

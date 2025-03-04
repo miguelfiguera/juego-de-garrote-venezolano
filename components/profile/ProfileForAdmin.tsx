@@ -81,13 +81,17 @@ const ProfileForAdmin: React.FC<ProfileForAdminProps> = ({ profile }) => {
       }
       toast.success("Permisos Actualizados");
       router.refresh();
-    } catch (err: any) {
-      console.error("Error updating custom claims:", err);
-      dispatch({
-        type: "SET_ERROR",
-        payload: err.message || "Error al actualizar los roles.",
-      });
-      toast.error("Error al actualizar los roles.");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Error updating custom claims:", error);
+        dispatch({
+          type: "SET_ERROR",
+          payload: error.message || "Error al actualizar los roles.",
+        });
+        toast.error("Error al actualizar los roles.");
+      } else {
+        toast.error("Error al actualizar los roles.");
+      }
     } finally {
       dispatch({ type: "SET_LOADING", payload: false });
     }

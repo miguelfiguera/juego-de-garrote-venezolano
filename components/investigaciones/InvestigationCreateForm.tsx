@@ -28,7 +28,7 @@ type FormAction =
       type: "UPDATE_FIELD";
       payload: {
         field: keyof Omit<FormState, "loading" | "error">;
-        value: any;
+        value: string;
       };
     }
   | { type: "SET_LOADING"; payload: boolean }
@@ -78,7 +78,7 @@ const InvestigationForm: React.FC<InvestigationFormProps> = ({
     : "/investigaciones";
 
   const handleChange = useCallback(
-    (field: keyof Omit<FormState, "loading" | "error">, value: any) => {
+    (field: keyof Omit<FormState, "loading" | "error">, value: string) => {
       dispatch({ type: "UPDATE_FIELD", payload: { field, value } });
     },
     [dispatch]
@@ -106,6 +106,10 @@ const InvestigationForm: React.FC<InvestigationFormProps> = ({
         status: state.status,
       });
 
+      if (!newInvestigationId) {
+        throw new Error("Failed to create investigation");
+        return;
+      }
       toast.success("Investigation created successfully!");
       dispatch({ type: "RESET_FORM" }); // Clear the form
       router.push(routing);

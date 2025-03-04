@@ -2,7 +2,7 @@ import React from "react";
 import { show } from "@/lib/firebase/collections/publications";
 import PublicacionesFull from "@/components/publicaciones/PublicacionesFull";
 
-async function Page({ params }: any) {
+async function Page({ params }: { params: { id: string } }) {
   const result = await show(params.id);
   if (!result)
     return (

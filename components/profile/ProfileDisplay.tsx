@@ -13,7 +13,7 @@ interface ProfileInfoProps {
 
 const ProfileDisplay: React.FC<ProfileInfoProps> = ({ profile }) => {
   const router = useRouter();
-  let { userUid } = useSessionStore();
+  const { userUid } = useSessionStore();
   const { customClaims } = useCustomClaimStore();
 
   if (!profile) {

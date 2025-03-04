@@ -2,7 +2,7 @@ import React from "react";
 import { show } from "@/lib/firebase/collections/investigations";
 import { notFound } from "next/navigation";
 import InvestigacionFull from "@/components/investigaciones/InvestigacionFull";
-async function Page({ params }: any) {
+async function Page({ params }: { params: { id: string } }) {
   const investigation = await show(params.id);
   if (!investigation) {
     notFound();

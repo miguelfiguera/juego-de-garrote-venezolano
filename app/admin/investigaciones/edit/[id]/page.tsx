@@ -2,7 +2,7 @@ import React from "react";
 import InvestigationEditForm from "@/components/investigaciones/InvestigationEditForm";
 import { show } from "@/lib/firebase/collections/investigations";
 
-async function Page({ params }: any) {
+async function Page({ params }: { params: { id: string } }) {
   const result = await show(params.id);
   if (!result) {
     return (

@@ -4,7 +4,7 @@ import React, { useReducer } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "react-toastify";
-import { createUser, searchUserByEmail } from "@/lib/firebase/admin/auth";
+import { createUser } from "@/lib/firebase/admin/auth";
 
 interface State {
   email: string;

@@ -18,7 +18,7 @@ interface FormState {
 }
 
 type FormAction =
-  | { type: "UPDATE_FIELD"; payload: { field: keyof FormState; value: any } }
+  | { type: "UPDATE_FIELD"; payload: { field: keyof FormState; value: string } }
   | { type: "SET_LOADING"; payload: boolean }
   | { type: "SET_ERROR"; payload: string | null }
   | { type: "SET_PUBLICATION"; payload: Publication };
@@ -73,7 +73,7 @@ const EditPublicationForm: React.FC<EditPublicationFormProps> = ({
   const router = useRouter();
 
   const handleChange = useCallback(
-    (field: keyof FormState, value: any) => {
+    (field: keyof FormState, value: string) => {
       dispatch({ type: "UPDATE_FIELD", payload: { field, value } });
     },
     [dispatch]
@@ -102,13 +102,17 @@ const EditPublicationForm: React.FC<EditPublicationFormProps> = ({
 
       toast.success("¡Publicación actualizada con éxito!");
       router.push("/admin/publicaciones");
-    } catch (error: any) {
-      console.error("Error al actualizar la publicación", error);
-      dispatch({
-        type: "SET_ERROR",
-        payload: error.message || "Error al actualizar la publicación.",
-      });
-      toast.error(error.message || "Error al actualizar la publicación");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Error al actualizar la publicación", error);
+        dispatch({
+          type: "SET_ERROR",
+          payload: error.message || "Error al actualizar la publicación.",
+        });
+        toast.error(error.message || "Error al actualizar la publicación");
+      } else {
+        console.error("Error al actualizar la publicación", error);
+      }
     } finally {
       dispatch({ type: "SET_LOADING", payload: false });
     }

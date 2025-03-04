@@ -130,7 +130,7 @@ const EditPatioForm: React.FC<EditPatioFormProps> = ({ patio }) => {
       toast.success("¡Patio actualizado exitosamente!");
       dispatch({ type: "RESET" });
       router.push(routing);
-    } catch (error: any) {
+    } catch {
       dispatch({ type: "SET_ERROR", payload: "Error updating patio" });
     }
   };

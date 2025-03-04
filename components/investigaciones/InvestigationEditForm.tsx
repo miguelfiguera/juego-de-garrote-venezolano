@@ -29,7 +29,7 @@ type FormAction =
           | "investigatorId"
           | "investigatorName"
         >;
-        value: any;
+        value: string;
       };
     }
   | { type: "SET_LOADING"; payload: boolean }
@@ -86,13 +86,18 @@ interface InvestigationEditFormProps {
 const InvestigationEditForm: React.FC<InvestigationEditFormProps> = ({
   investigationData,
 }) => {
-  const [state, dispatch] = useReducer(formReducer, {
-    investigation: investigationData || null,
-    loading: false,
-    error: null,
-  });
+  const [state, dispatch] = useReducer(formReducer, initialFormState);
   const router = useRouter();
   const { customClaims } = useCustomClaimStore();
+  useEffect(() => {
+    async function nonConditionally() {
+      if (investigationData) {
+        dispatch({ type: "SET_INVESTIGATION", payload: investigationData });
+      }
+    }
+
+    nonConditionally();
+  }, []);
 
   const routing = customClaims?.admin
     ? `/admin/investigaciones/${investigationData?.id}`
@@ -114,18 +119,12 @@ const InvestigationEditForm: React.FC<InvestigationEditFormProps> = ({
     );
   }
 
-  useEffect(() => {
-    if (investigationData) {
-      dispatch({ type: "SET_INVESTIGATION", payload: investigationData });
-    }
-  }, []);
-
   const handleChange = (
     field: keyof Omit<
       Investigation,
       "id" | "createdAt" | "updatedAt" | "investigatorId" | "investigatorName"
     >,
-    value: any
+    value: string
   ) => {
     dispatch({ type: "UPDATE_FIELD", payload: { field, value } });
   };
@@ -152,13 +151,17 @@ const InvestigationEditForm: React.FC<InvestigationEditFormProps> = ({
 
       toast.success("Investigación actualizada con éxito!");
       router.push(routing);
-    } catch (error: any) {
-      console.error("Error al actualizar la investigación", error);
-      dispatch({
-        type: "SET_ERROR",
-        payload: error.message || "Error al actualizar la investigación",
-      });
-      toast.error(error.message || "Error al actualizar la investigación");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Error al actualizar la investigación", error);
+        dispatch({
+          type: "SET_ERROR",
+          payload: error.message || "Error al actualizar la investigación",
+        });
+        toast.error(error.message || "Error al actualizar la investigación");
+      } else {
+        toast.error("No se pudo actualizar, comunicate con soporte.");
+      }
     } finally {
       dispatch({ type: "SET_LOADING", payload: false });
     }

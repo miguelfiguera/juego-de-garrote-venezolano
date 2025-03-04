@@ -45,9 +45,13 @@ const InvestigacionFull: React.FC<InvestigacionFullProps> = ({
       } else {
         router.push("/investigaciones"); // Redirect to the investigations list after successful deletion
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Failed to delete investigation:", error.message);
+        toast.error(error.message || "Failed to delete investigation");
+      }
       console.error("Failed to delete investigation", error);
-      toast.error(error.message || "Failed to delete investigation");
+      toast.error("Failed to delete investigation");
     }
   };
 
