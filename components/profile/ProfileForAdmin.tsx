@@ -5,7 +5,9 @@ import React, { useReducer } from "react";
 import { Profile, Claims } from "@/lib/interfaces/interfaces"; // Adjust the path
 import { toast } from "react-toastify";
 import { modifyCustomClaimsAdmin } from "@/lib/firebase/admin/auth";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 
 interface ProfileForAdminProps {
   profile: Profile;
@@ -24,7 +26,8 @@ type Action =
   | { type: "SET_ERROR"; payload: string | null }
   | { type: "SET_ADMIN"; payload: boolean }
   | { type: "SET_MASTER"; payload: boolean }
-  | { type: "SET_BLOGGER"; payload: boolean };
+  | { type: "SET_BLOGGER"; payload: boolean }
+  | { type: "RESET"; payload: null };
 
 const initialState: State = {
   admin: false,
@@ -46,6 +49,8 @@ const reducer = (state: State, action: Action): State => {
       return { ...state, master: action.payload };
     case "SET_BLOGGER":
       return { ...state, blogger: action.payload };
+    case "RESET":
+      return { ...initialState };
     default:
       return state;
   }
@@ -53,11 +58,9 @@ const reducer = (state: State, action: Action): State => {
 
 const ProfileForAdmin: React.FC<ProfileForAdminProps> = ({ profile }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const router = useRouter();
 
-  const handleClaimChange = async (
-    claimName: keyof Omit<Claims, "seller" | "investigator" | "jugador">,
-    value: boolean
-  ) => {
+  const handleClaimChange = async () => {
     dispatch({ type: "SET_LOADING", payload: true });
     dispatch({ type: "SET_ERROR", payload: null });
 
@@ -70,15 +73,14 @@ const ProfileForAdmin: React.FC<ProfileForAdminProps> = ({ profile }) => {
     try {
       const result = await modifyCustomClaimsAdmin(profile.userId, AddedClaims);
 
-      if (typeof result === "boolean" && result) {
-        toast.success(
-          `Permisos actualizados con éxito para ${
-            profile.name + " " + profile.lastname
-          }.`
+      if (!result) {
+        toast.error(
+          "Error desconocido al modificar permisos. Contactar a soporte."
         );
-      } else {
-        toast.error("Error al actualizar los roles.");
+        return;
       }
+      toast.success("Permisos Actualizados");
+      router.refresh();
     } catch (err: any) {
       console.error("Error updating custom claims:", err);
       dispatch({
@@ -113,7 +115,9 @@ const ProfileForAdmin: React.FC<ProfileForAdminProps> = ({ profile }) => {
           </div>
         )}
         <p className="card-text">
-          <strong>Nombre:</strong> {profile.name} {profile.lastname}
+          <Link href={`/admin/profiles/${profile.userId}`}>
+            <strong>Nombre:</strong> {profile.name} {profile.lastname}
+          </Link>
         </p>
         <p className="card-text">
           <strong>Email:</strong> {profile.email}
@@ -172,7 +176,7 @@ const ProfileForAdmin: React.FC<ProfileForAdminProps> = ({ profile }) => {
           </label>
         </div>
       </div>
-      <button className="btn btn-primary my-3 mx-3">
+      <button className="btn btn-primary my-3 mx-3" onClick={handleClaimChange}>
         {state.loading ? (
           <p>Actualizando Permisos...</p>
         ) : (

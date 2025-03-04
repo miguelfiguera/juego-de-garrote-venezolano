@@ -2,6 +2,7 @@
 
 import React, { ReactNode } from "react";
 import AdminSidebar from "@/components/Admin/AdminSidebar";
+import { ToastContainer } from "react-toastify";
 
 interface AlternativeLayoutProps {
   children: ReactNode;
@@ -18,6 +19,7 @@ export default function AlternativeLayout({
         {/* Add any specific metadata or CSS links here */}
       </head>
       <body>
+        <ToastContainer />
         <AdminSidebar />
         <div>{children}</div>
         <script

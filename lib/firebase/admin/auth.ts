@@ -51,7 +51,7 @@ export const createUser = async (
   }
 };
 
-//get custom claims
+//get custom claims, custom claims are permissions like admin or so.
 
 export const getUserCustomClaims = async (uid: string) => {
   try {
@@ -80,9 +80,19 @@ export const modifyCustomClaimsAdmin = async (
   uid: string,
   claims: Pick<Claims, "admin" | "master" | "blogger">
 ) => {
+  const totalClaims = await getUserCustomClaims(uid);
+
+  if (!totalClaims) return false;
+
+  claims = {
+    ...totalClaims,
+    ...claims,
+  };
+
   try {
     await adminAuth.setCustomUserClaims(uid, claims);
     revalidatePath("/profile");
+    revalidatePath("/admin/profile");
     return true;
   } catch (error) {
     console.error("Error modifying custom claims:", error);
@@ -245,6 +255,26 @@ export const logoutUser = async () => {
 
 // Get user ID from cookie
 export const getUserIdFromCookie = async () => {
+  try {
+    const session = cookies().get("session");
+    if (!session) {
+      return null;
+    }
+    const decodedToken = await adminAuth.verifySessionCookie(
+      session.value,
+      true
+    );
+    if (!decodedToken) {
+      return null;
+    }
+    return decodedToken.uid;
+  } catch (error) {
+    console.error("Error decoding token:", error);
+    return null;
+  }
+};
+
+export const getUserFromCookie = async () => {
   try {
     const session = cookies().get("session");
     if (!session) {

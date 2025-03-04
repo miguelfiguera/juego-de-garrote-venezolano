@@ -20,17 +20,17 @@ Los datos se almacenan y gestionan mediante **Firebase Store & Storage**, permit
 
 ---
 
-## Para correr en modo desarrollo:
+## Notas del autor
 
-Para este proyecto hay una base de datos para desarrollo, las .env las puedes encontrar en el archivo .sample.env, esas pertenecen a las variables de desarrollo del firebase SDK y el archivo notSoSecret.json contiene las referentes al admin SDK de firebase. De esa forma puede ser corrido en local con estos ligeros ajustes:
+La arquitectura de código es la que se usa comunmente en nextjs en proyectos pequeños, se separa cada pagina de acuerdo a su funcion principal y luego se hacen subcategorias a partir de alli.
 
-1.
-2.
-3.
-4.
-5.
-6.
-7.
+Las funciones que deban correr en el servidor van en lib y dependiendo de su funcion se subdividen. En este caso estan las interfaces (modelos para el tipado seguro), firebase (admin sdk, firebase sdk y funciones de authentication) y zustand (persistencia de estados en client-side).
+
+Este proyecto es una primera etapa del trabajo realizado y la idea es perfeccionarlo el semestre que viene, pero por ahora está en excelentes condiciones.
+
+En estos momentos no cuenta con un middleware.js para control de uso debido a que la aplicacion esta 100% abierta para que la gente del patio ambrosio aguilar y los profesores de la UNETI puedan revisarla de forma rapida y sencilla.
+
+Sin mas a que hacer referencia, pueden proseguir.
 
 ---
 
